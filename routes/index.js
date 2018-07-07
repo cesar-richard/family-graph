@@ -12,7 +12,6 @@ function containsObject(obj, list) {
 	return false;
 }
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
 	res.redirect('/auth/facebook');
 });
@@ -76,57 +75,6 @@ router.get('/delete', cas.block, function(req, res, next) {
 		});
 	});
 });
-
-/*
-router.get('/order', function(req, res, next) {
-	global.pool.getConnection(function(err, connection) {
-		if(err){
-			console.error(err);
-			return;
-		}
-		connection.query("SELECT * FROM `parrain` ORDER BY `UPDATED_AT` ASC;", function(err, links) {
-			if(err)
-				console.error(err);
-			links.forEach(function(link, index){
-				global.pool.getConnection(function(err, connection2) {
-					if(err){
-						console.error(err);
-						return;
-					}
-					connection2.query("SELECT * FROM `nodes` WHERE `label` like ?;",[link.from.normalize('NFD').replace(/[\u0300-\u036f]/g, "")], function(err, fromNode) {
-						global.pool.getConnection(function(err, connection3) {
-							connection3.query("SELECT * FROM `nodes` WHERE `label` like ?;",[link.to.normalize('NFD').replace(/[\u0300-\u036f]/g, "")], function(err, toNode) {
-								console.log(link.to.normalize('NFD').replace(/[\u0300-\u036f]/g, ""));
-								if(err){
-									console.error(err);
-									return;
-								}
-								global.pool.getConnection(function(err, connection4) {
-									connection4.query("INSERT INTO `edges` (`from`,`to`,`creator`,`UPDATED_AT`) VALUES (?,?,?,?);",[fromNode[0].id,toNode[0].id,link.creator,link.UPDATED_AT], function(err, results) {
-										if(err){
-											console.log("link = " + link.from + " to " + link.to);
-											console.log(fromNode,toNode);
-											console.error(err);
-											console.error(this.sql);
-										}else{
-											console.log(results.insertId);
-										}
-										connection4.release();
-									});
-								});
-							});
-							connection3.release();
-						});
-					});
-					connection2.release();
-				});
-			});
-			connection.release();
-			res.send({"success": true});
-		});
-	});
-});
-*/
 
 router.post("/getNodeId", cas.block,  function(req, res, next) {
 	global.pool.getConnection(function(err, connection) {
@@ -211,27 +159,6 @@ router.get('/view', cas.bounce, function(req, res, next) {
 		});
 	});
 });
-
-/*router.get('/datas', cas.bounce, function(req, res, next) {
-	global.pool.getConnection(function(err, connection) {
-		if(err){
-			console.error(err);
-			return;
-		}
-		connection.query("SELECT `from`,`to` FROM `parrain` ORDER BY `from`,`to`;", function(err, rows) {
-			if(err)
-				console.error(err);
-			connection.release();
-			var nodes="dinetwork {";
-			rows.forEach(function(item, index){
-				nodes=nodes + '"' + item.from + '"->"' + item.to + '";';
-			});
-			nodes = nodes+"}";
-			res.send(nodes);
-		});
-	});
-});*/
-
 
 router.get('/nodes', cas.block, function(req, res, next) {
 	global.pool.getConnection(function(err, connection) {
