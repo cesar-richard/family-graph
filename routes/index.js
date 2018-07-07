@@ -96,6 +96,21 @@ router.get('/', cas.bounce, function(req, res, next) {
 	});
 });
 
+router.get('/getnodes',  function(req, res, next) {
+	global.pool.getConnection(function(err, connection) {
+		if(err){
+			console.error(err);
+			return;
+		}
+		connection.query("SELECT `label` FROM `nodes` WHERE `label` LIKE ? ORDER BY `label` ASC;", ['%'+req.query.term+'%'], function(err, rows) {
+			if(err)
+				console.error(err);
+			connection.release();
+			res.send(JSON.stringify(rows));
+		});
+	});
+});
+
 router.post('/add', cas.block, function(req, res, next) {
 	console.log("Added by "+req.session[ cas.session_name ]);
 	global.pool.getConnection(function(err, connection) {
