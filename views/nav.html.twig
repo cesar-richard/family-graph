@@ -1,0 +1,2 @@
+<li>{% if user %}{% else %}<a href="/auth/facebook">Login</a>{% endif %}</li>
+{% if user %}<li><a>Logged in as {{user.displayName}}</a></li>{% endif %}

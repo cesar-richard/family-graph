@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="Cesar Richard">
+    <link rel="icon" href="/img/favicon.ico">
+
+    <title>{% block title %}Facebook graphs{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    {% block otherCss %}
+    {% endblock %}
+    <link href="/css/main.css" rel="stylesheet">
+    {% endblock %}
+  </head>
+
+  <body>
+  <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1796577050626136',
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner"><a class="brand" href="/">Facebook graphs</a>
+            <ul class="nav">
+                {% include 'nav.html.twig' %}
+            </ul>
+        </div>
+    </div>
+    {% block content %}
+    {% endblock %}<!-- /.container -->
+
+    {% block footer %}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    {% block jslibs %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    {% endblock %}
+    <script src="/js/main.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    {% endblock %}
+    {% block js %}{% endblock %}
+  </body>
+</html>
