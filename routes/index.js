@@ -12,37 +12,6 @@ function containsObject(obj, list) {
 	return false;
 }
 
-router.get('/', function(req, res, next) {
-	res.redirect('/auth/facebook');
-});
-
-router.get('/ok', function(req, res, next) {
-	res.render('index.html.twig', {user: req.user});
-});
-
-router.get('/graph', function(req, res, next) {
-	res.render('graph.html.twig', {user: req.user});
-});
-
-router.get('/confid', function(req, res, next) {
-	res.render('confid.html.twig');
-});
-
-router.get('/getnodes',  function(req, res, next) {
-	global.pool.getConnection(function(err, connection) {
-		if(err){
-			console.error(err);
-			return;
-		}
-		connection.query("SELECT `from` as `label` FROM `parrain` WHERE `from` LIKE ? UNION SELECT `to` FROM `parrain` WHERE `to` LIKE ? ORDER BY `label` ASC;", ['%'+req.query.term+'%','%'+req.query.term+'%'], function(err, rows) {
-			if(err)
-				console.error(err);
-			connection.release();
-			res.send(JSON.stringify(rows));
-		});
-	});
-});
-
 router.get('/delete', cas.block, function(req, res, next) {
 	global.pool.getConnection(function(err, connection) {
 		if(err){
@@ -107,7 +76,7 @@ router.post("/getNodeId", cas.block,  function(req, res, next) {
 	});
 });
 
-router.get('/add', cas.bounce, function(req, res, next) {
+router.get('/', cas.bounce, function(req, res, next) {
 	console.log("Add for "+req.session[ cas.session_name ]);
 	global.pool.getConnection(function(err, connection) {
 		if(err){
@@ -127,7 +96,7 @@ router.get('/add', cas.bounce, function(req, res, next) {
 	});
 });
 
-router.post('/add',  function(req, res, next) {
+router.post('/add', cas.block, function(req, res, next) {
 	console.log("Added by "+req.session[ cas.session_name ]);
 	global.pool.getConnection(function(err, connection) {
 		if(err){
