@@ -31,14 +31,18 @@
 		});
 		$( "#add" ).click(function(event) {
 			event.preventDefault();
-			$.post( '/getNodeId',{ who: $("#from").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}, function (data){
+			var fromTxt = $("#from").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+			var toTxt = $("#to").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+			if(fromTxt=="" || toTxt=="")
+				return;
+			$.post( '/getNodeId',{ who: fromTxt}, function (data){
 				console.log(data);
 				fromId=data.id;
-				$.post( '/getNodeId',{ who: $("#to").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}, function (data){
+				$.post( '/getNodeId',{ who: toTxt}, function (data){
 					console.log(data);
 					toId=data.id;
 					$.post( '/add',{ from: fromId, to: toId }, function(data) {
-						$("<tr><td>"+data.from+"</td><td>"+data.to+"</td><td><button class=\"btn btn-danger delete\" linkid=\""+data.id+"\" >X</button></td></tr>").prependTo("table > tbody");
+						$("<tr><td>" + fromTxt + "</td><td>" + toTxt +"</td><td><button class=\"btn btn-danger delete\" linkid=\"" + data.id + "\" >X</button></td><td>{{user}}</td></tr>").prependTo("table > tbody");
 						deleteHandler();
 						$("#to").val("");
 					});
@@ -106,12 +110,12 @@
 							<th>
 								Fillot(te)
 							</th>
-							{% if user == "cerichar" %}<th>
-								Createur
-							</th>{% endif %}
 							<th>
 								Supprimer
 							</th>
+							{% if user == "cerichar" %}<th>
+								Createur
+							</th>{% endif %}
 						</tr>
 					</thead>
 					<tbody>
@@ -119,13 +123,13 @@
 						<tr id="tr{{link.id}}">
 							<td>{{link.from}}</td>
 							<td>{{link.to}}</td>
-							{% if user == "cerichar" %}<td>{{link.creator}}</td>{% endif %}
 							<td>{% if user == link.creator or user == "cerichar" %}
 								<button class="btn btn-danger delete" id="add" linkid="{{link.id}}" >
 									X
 								</button>
 								{% endif %}
 							</td>
+							{% if user == "cerichar" %}<td>{{link.creator}}</td>{% endif %}
 						</tr>
 						{% endfor %}
 					</tbody>
