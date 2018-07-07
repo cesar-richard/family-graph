@@ -16,14 +16,14 @@
 
 	<script type="text/javascript">
 	function deleteHandler(){
-			$( ".delete" ).click(function(event) {
-				event.preventDefault();
-				var id = $(this).attr("linkid");
-				$.get( '/delete',{ "id": id }, function(data) {
-					$("#tr"+id).remove();
-				});
+		$( ".delete" ).click(function(event) {
+			event.preventDefault();
+			var id = $(this).attr("linkid");
+			$.get( '/delete',{ "id": id }, function(data) {
+				$("#tr"+id).remove();
 			});
-		}
+		});
+	}
 	$(function(){
 		$( ".namecomplete" ).autocomplete({
 			source: "/getnodes",
@@ -31,11 +31,21 @@
 		});
 		$( "#add" ).click(function(event) {
 			event.preventDefault();
-			$.post( '/add',{ from: $("#from").val().normalize('NFD').replace(/[\u0300-\u036f]/g, ""), to: $("#to").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "") }, function(data) {
-				$("<tr><td>"+data.from+"</td><td>"+data.to+"</td><td><button class=\"btn btn-danger delete\" linkid=\""+data.id+"\" >X</button></td></tr>").prependTo("table > tbody");
-				deleteHandler();
-				$("#to").val("");
+			$.post( '/getNodeId',{ who: $("#from").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}, function (data){
+				console.log(data);
+				fromId=data.id;
+				$.post( '/getNodeId',{ who: $("#to").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}, function (data){
+					console.log(data);
+					toId=data.id;
+					$.post( '/add',{ from: fromId, to: toId }, function(data) {
+						$("<tr><td>"+data.from+"</td><td>"+data.to+"</td><td><button class=\"btn btn-danger delete\" linkid=\""+data.id+"\" >X</button></td></tr>").prependTo("table > tbody");
+						deleteHandler();
+						$("#to").val("");
+					});
+				});
 			});
+
+
 		});
 
 		deleteHandler();
