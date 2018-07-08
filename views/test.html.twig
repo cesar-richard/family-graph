@@ -141,10 +141,10 @@
 		{% if user == "cerichar" %}
 		$("#save").click(function(event) {
 			event.preventDefault();
-			var nodes = objectToArray(network.getPositions());
+			var nodes = objectToArray(network.body.nodes);
 			nodes.forEach(function(node, index){
-				$.post( '/udpateNodePos',{"id": index+1, "x": node.x, "y":node.y}, function(res) {
-					//console.log(res);
+				$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
+					//console.log(node,res);
 				});
 			});
 		});
