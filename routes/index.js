@@ -102,7 +102,7 @@ router.get('/getnodes',  function(req, res, next) {
 			console.error(err);
 			return;
 		}
-		connection.query("SELECT `label` FROM `nodes` WHERE `label` LIKE ? ORDER BY `label` ASC;", ['%'+req.query.term+'%'], function(err, rows) {
+		connection.query("SELECT `label` FROM `nodes` WHERE UPPER(`label`) LIKE UPPER(?) ORDER BY `label` ASC;", ['%'+req.query.term+'%'], function(err, rows) {
 			if(err)
 				console.error(err);
 			connection.release();
