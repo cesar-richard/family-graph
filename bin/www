@@ -25,6 +25,34 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+
+var io = require('socket.io')(server, {
+  path: '/socket.io/',
+  serveClient: false,
+  // below are engine.IO options
+  pingInterval: 10000,
+  pingTimeout: 5000,
+  cookie: false
+});
+io.on('connection', function(socket){
+  console.log('A user connected');
+  socket.on("node add", function(msg){
+    console.log("Node add broadcast");
+    socket.broadcast.emit('node add', msg);
+  });
+  socket.on("edge add", function(msg){
+    console.log("Edge add broadcast");
+    socket.broadcast.emit('edge add', msg);
+  });
+
+  socket.on("TEST", function(msg){
+    console.log("TEST broadcast");
+    socket.broadcast.emit('TEST', msg);
+  });
+});
+global.io = io;
+console.log("Socket initialized");
+
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);

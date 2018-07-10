@@ -5,6 +5,7 @@
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="/js/vis.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
 	<link href="/css/vis.min.css" rel="stylesheet" type="text/css" />
 
 	<style type="text/css">
@@ -95,7 +96,7 @@
 	<div id="mynetwork"></div>
 	{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button>{% endif %}
 	<script type="text/javascript">
-	var network;
+	var network,nodes,edges;
 	function objectToArray(obj) {
 		return Object.keys(obj).map(function (key) {
 			obj[key].id = key;
@@ -124,11 +125,13 @@
 				}
 			}
 		};
-		$.get( '/nodes', function(nodes) {
-			$.get( '/edges', function(edges) {
+		$.get( '/nodes', function(nodelist) {
+			$.get( '/edges', function(edgelist) {
+				nodes = new vis.DataSet(nodelist);
+				edges = new vis.DataSet(edgelist);
 				var data = {
-					nodes: new vis.DataSet(nodes),
-					edges: new vis.DataSet(edges)
+					nodes: nodes,
+					edges: edges
 				}
 				network = new vis.Network(container, data, options);
 				options.physics.enabled=true;
@@ -147,6 +150,15 @@
 					//console.log(node,res);
 				});
 			});
+		});
+		var socket = io();
+		socket.on('node add', function(msg){
+			console.log("NODE ADD ",msg);
+			nodes.add(msg);
+		});
+		socket.on('edge add', function(msg){
+			console.log("EDGE ADD ",msg);
+			edges.add(msg);
 		});
 		{% endif %}
 	});

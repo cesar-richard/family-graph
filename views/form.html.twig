@@ -13,6 +13,7 @@
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
 
 	<script type="text/javascript">
 	function deleteHandler(){
@@ -25,6 +26,7 @@
 		});
 	}
 	$(function(){
+		var socket = io();
 		$( ".namecomplete" ).autocomplete({
 			source: "/getnodes",
 			minLength: 3
@@ -36,15 +38,14 @@
 			if(fromTxt=="" || toTxt=="")
 				return;
 			$.post( '/getNodeId',{ who: fromTxt}, function (data){
-				console.log(data);
 				fromId=data.id;
 				$.post( '/getNodeId',{ who: toTxt}, function (data){
-					console.log(data);
 					toId=data.id;
 					$.post( '/add',{ from: fromId, to: toId }, function(data) {
 						$("<tr><td>" + fromTxt + "</td><td>" + toTxt +"</td><td><button class=\"btn btn-danger delete\" linkid=\"" + data.id + "\" >X</button></td><td>{{user}}</td></tr>").prependTo("table > tbody");
 						deleteHandler();
 						$("#to").val("");
+
 					});
 				});
 			});

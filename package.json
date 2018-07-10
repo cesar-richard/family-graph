@@ -17,6 +17,7 @@
     "passport": "0.2.1",
     "passport-facebook": "latest",
     "serve-favicon": "^2.3.0",
+    "socket.io": "^2.1.1",
     "twig": "^0.8.7",
     "vis": "^4.16.1"
   },
