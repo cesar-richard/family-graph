@@ -11,6 +11,7 @@ var CASAuthentication = require('cas-authentication');
 var cas = new CASAuthentication(config.cas);
 global.cas = cas;
 
+
 var routes = require('./routes/index');
 
 var app = express();
