@@ -141,7 +141,7 @@ router.get('/view', cas.bounce, function(req, res, next) {
 			if(err)
 				console.error(err);
 			connection.release();
-			res.render('test.html.twig', {user:req.session[ cas.session_name ]});
+			res.render('view.html.twig', {user:req.session[ cas.session_name ]});
 		});
 	});
 });
