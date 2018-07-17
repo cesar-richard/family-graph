@@ -171,6 +171,9 @@ router.get('/edges', cas.block, function(req, res, next) {
 			if(err)
 				console.error(err);
 			connection.release();
+			edges.forEach(function(edge, index){
+				edges[index].dashes = (edge.dashes==0)?false:true;
+			});
 			res.send(edges);
 		});
 	});
