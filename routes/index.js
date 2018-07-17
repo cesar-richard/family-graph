@@ -68,7 +68,7 @@ router.post("/getNodeId", cas.block,  function(req, res, next) {
 						connection2.release();
 						if(err)
 							console.error(err);
-						global.io.emit('node add',{"id": rows2.insertId, "label": req.body.who});
+						global.io.emit('node add',{"id": rows2.insertId, "label": req.body.who, "color": {"background":"#F03967", "border":"#713E7F"}});
 						res.send({"status":"success","method":"create","id":rows2.insertId});
 					});
 				});
@@ -123,7 +123,7 @@ router.post('/add', cas.block, function(req, res, next) {
 			if(err)
 				console.error(err);
 			connection.release();
-			global.io.emit('edge add',{"id":rows.insertId,"from": req.body.from, "to": req.body.to, "arrows": "to"});
+			global.io.emit('edge add',{"id":rows.insertId,"from": req.body.from, "to": req.body.to, "arrows": "to", "color":{"color":"red"}});
 			res.send({"status":"success","id":rows.insertId,"from": req.body.from, "to": req.body.to});
 		});
 	});
