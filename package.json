@@ -26,5 +26,20 @@
     "start": "node ./bin/www"
   },
   "author": "César Richard",
-  "license": "ISC"
+  "license": "ISC",
+  "nodemonConfig": {
+    "ignore": [
+      ".git",
+      "node_modules/**/node_modules"
+    ],
+    "verbose": true,
+    "execMap": {
+      "js": "node --harmony"
+    },
+    "watch": ["*.js,*.json,*.twig,*.css"],
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "ext": "js,json,twig"
+  }
 }

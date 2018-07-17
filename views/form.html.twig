@@ -11,9 +11,19 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous" />
+
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" integrity="sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=" crossorigin="anonymous"></script>
+
+	<style type="text/css">
+	#mynetwork {
+		height: 700px;
+		border: 1px solid lightgray;
+	}
+	</style>
 
 	<script type="text/javascript">
 	function deleteHandler(){
@@ -25,12 +35,68 @@
 			});
 		});
 	}
+
+	var network,nodes,edges;
+	function objectToArray(obj) {
+		return Object.keys(obj).map(function (key) {
+			obj[key].id = key;
+			return obj[key];
+		});
+	}
+
+	function startNetwork() {
+		var container = document.getElementById('mynetwork');
+		var  options = {
+			nodes: {
+				shape: 'dot',
+				size: 16
+			},
+			physics: {
+				forceAtlas2Based: {
+					gravitationalConstant: -30,
+					centralGravity: 0.004,
+				},
+				solver: 'forceAtlas2Based',
+				timestep: 0.2,
+				stabilization: {
+					enabled:false,
+					iterations:500,
+					updateInterval:25
+				}
+			}
+		};
+		$.get( '/nodes', function(nodelist) {
+			$.get( '/edges', function(edgelist) {
+				nodes = new vis.DataSet(nodelist);
+				edges = new vis.DataSet(edgelist);
+				var data = {
+					nodes: nodes,
+					edges: edges
+				}
+				network = new vis.Network(container, data, options);
+				options.physics.enabled=true;
+				network.setOptions(options);
+			});
+		});
+	}
+
 	$(function(){
 		var socket = io();
 		$( ".namecomplete" ).autocomplete({
 			source: "/getnodes",
 			minLength: 3
 		});
+		{% if user == "cerichar" %}
+		$("#save").click(function(event) {
+			event.preventDefault();
+			var nodes = objectToArray(network.body.nodes);
+			nodes.forEach(function(node, index){
+				$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
+					//console.log(node,res);
+				});
+			});
+		});
+		{% endif %}
 		$( "#add" ).click(function(event) {
 			event.preventDefault();
 			var fromTxt = $("#from").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
@@ -57,30 +123,33 @@
 				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 			});
 		});
+		startNetwork();
+		socket.on('node add', function(msg){
+			console.log("NODE ADD ",msg);
+			nodes.add(msg);
+		});
+		socket.on('edge add', function(msg){
+			console.log("EDGE ADD ",msg);
+			edges.add(msg);
+		});
 	});	
 	</script>
 </head>
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-12 jum">
-				<div class="jumbotron">
-					<div class="container">
-						<h2>
+			<div class="col-md-12 text-center">
+						<h1 class="display-4">
 							Genealog'Utc
 						</h2>
-						<p>
+						<p class="lead">
 							Entrez les noms de vos parrains/marraines/fillots/fillottes, officiels/adoptés/disparus/chelous afin de contruire un joli graph !
-							Le resultat sera visible <a href="/view">ici</a> :)
 						</p>
-					</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-6">
-			</div>
-			<div class="col-md-12">
 				<form class="form-horizontal" role="form">
 					<div class="form-group">
 						<label for="from" class="col-sm-2 control-label">
@@ -148,6 +217,11 @@
 					</tbody>
 				</table>
 			</div>
+			<h2>Graph <a class="btn btn-primary" href="/view">(cliquez ici pour le voir en grand)</a></h2>
+			<div>Utilisez la molette pour zoomer</div>
+			<div class="col-md-6" id="mynetwork">
+			</div>
+			{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button>{% endif %}
 		</div>
 	</div>
 </body>
