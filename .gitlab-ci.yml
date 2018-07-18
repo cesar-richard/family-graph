@@ -29,3 +29,8 @@ test_db:
   script:
    - npm install
    - node ./specs/start.js ./specs/db-postgres.spec.js
+
+connect:
+  image: mysql
+  script:
+  - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
