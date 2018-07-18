@@ -20,17 +20,12 @@ cache:
   paths:
   - node_modules/
 
-test_async:
-  script:
-   - npm install
-   - node ./specs/start.js ./specs/async.spec.js
-
-test_db:
-  script:
-   - npm install
-   - node ./specs/start.js ./specs/db-postgres.spec.js
-
-connect:
+test_mysql_connect:
   image: mysql
   script:
   - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
+
+test_app_start:
+  script:
+   - npm install
+   - node bin/www
