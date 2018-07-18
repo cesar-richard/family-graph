@@ -22,10 +22,12 @@ cache:
 
 test:lint:
   script:
+    - npm install
     - npm run lint
 
 test:vulnerabilities:
   script:
+    - npm install
     - npm run vuln-test
 
 test:mysql_connect:
