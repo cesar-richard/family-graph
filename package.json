@@ -57,8 +57,20 @@
     "prestart": "npm run lint",
     "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/app.js && npm run nsp"
   },
-  "author": "César Richard",
-  "license": "ISC",
+  "cacheDirectories": [
+    "node_modules"
+  ],
+  "author": "Cesar Richard <cesar.richard@u-psud.fr>",
+  "license": "CC-BY-NC-ND-4.0",
+  "homepage": "https://github.com/cesar-richard/family-graph",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cesar-richard/family-graph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cesar-richard/family-graph/issues",
+    "email": "cesar.richard@u-psud.fr"
+  },
   "nodemonConfig": {
     "ignore": [
       ".git",
