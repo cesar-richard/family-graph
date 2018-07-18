@@ -20,12 +20,22 @@ cache:
   paths:
   - node_modules/
 
-test_async:
+test:lint:
   script:
-   - npm install
-   - node ./specs/start.js ./specs/async.spec.js
+    - npm run lint
 
-test_db:
+test:vulnerabilities:
   script:
-   - npm install
-   - node ./specs/start.js ./specs/db-postgres.spec.js
+    - npm run vuln-test
+
+test:mysql_connect:
+  image: mysql
+  script:
+  - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
+
+test:node:6:
+  script:
+    - npm install -g codecov
+    - npm install
+    - npm run build
+    - npm test && codecov
