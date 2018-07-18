@@ -37,5 +37,4 @@ test:node:6:
   script:
     - npm install -g codecov
     - npm install
-    - npm run build
     - npm test && codecov
