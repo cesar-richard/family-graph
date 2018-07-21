@@ -31,7 +31,7 @@ module.exports = {
     };
     Array.prototype.findObjectByProp = function _findObjectByProp(prop, value) {
       for (let i = 0; i < this.length; i++) {
-        if (this[i][prop] == value) {
+        if (this[i][prop] === value) {
           return this[i];
         }
       }
@@ -40,7 +40,7 @@ module.exports = {
 
     Array.prototype.extend = function _extendArray(array) {
       if (typeof array === 'undefined') throw new Error('Argument 1 (and only) must be an array');
-      this.push.apply(this, array);
+      this.push.apply(this, array); // eslint-disable-line prefer-spread
     };
     const pool = mysql.createPool({
       connectionLimit: 50,
