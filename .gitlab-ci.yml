@@ -13,6 +13,7 @@ variables:
   # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)
   MYSQL_DATABASE: family-graph
   MYSQL_ROOT_PASSWORD: mysql_strong_password
+  
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
@@ -28,14 +29,14 @@ test:lint:
 test:vulnerabilities:
   script:
     - npm install
-    - npm run vuln-test
+    - npm run nsp
 
 test:mysql_connect:
   image: mysql
   script:
   - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
 
-test:node:6:
+test:node:
   script:
     - npm install -g codecov
     - npm install
