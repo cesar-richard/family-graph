@@ -11,7 +11,18 @@ const session = require('express-session');
 const CASAuthentication = require('cas-authentication');
 
 const cas = new CASAuthentication(config.cas);
-global.cas = cas;
+var fakeCas = {
+  session_name: "session", 
+  block:function (req, res, next){
+    req.session[this.session_name]="testuser";
+    next();
+  },
+  bounce:function (req, res, next){
+    req.session[this.session_name]="testuser";
+    next();
+  }
+}
+global.cas = process.env.NODE_ENV==="testing"?fakeCas:cas;
 
 const routes = require('./routes/index');
 
@@ -34,12 +45,6 @@ app.use(
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-
-app.get('/logout', function(req, res) {
-  console.log(`User ${req.user.displayName} logged out.`); // eslint-disable-line no-console
-  req.logout();
-  res.redirect('/');
-});
 
 console.log('Routes initialized'); // eslint-disable-line no-console
 
