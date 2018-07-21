@@ -12,6 +12,12 @@ cache:
   paths:
   - node_modules/
 
+test:mysql_connect:
+  image: mysql
+  script:
+    - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
+    - cat test/struct.sql | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE" $MYSQL_DATABASE
+
 test:lint:
   script:
     - npm install
@@ -21,11 +27,6 @@ test:vulnerabilities:
   script:
     - npm install
     - npm run nsp
-
-test:mysql_connect:
-  image: mysql
-  script:
-  - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
 
 test:node:
   script:
