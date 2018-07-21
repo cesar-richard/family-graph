@@ -11,18 +11,18 @@ const session = require('express-session');
 const CASAuthentication = require('cas-authentication');
 
 const cas = new CASAuthentication(config.cas);
-var fakeCas = {
-  session_name: "session", 
-  block:function (req, res, next){
-    req.session[this.session_name]="testuser";
+const fakeCas = {
+  session_name: 'session',
+  block(req, res, next) {
+    req.session[this.session_name] = 'testuser';
     next();
   },
-  bounce:function (req, res, next){
-    req.session[this.session_name]="testuser";
+  bounce(req, res, next) {
+    req.session[this.session_name] = 'testuser';
     next();
   }
-}
-global.cas = process.env.NODE_ENV==="testing"?fakeCas:cas;
+};
+global.cas = process.env.NODE_ENV === 'testing' ? fakeCas : cas;
 
 const routes = require('./routes/index');
 
