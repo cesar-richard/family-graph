@@ -4,29 +4,29 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('parserFb:server');
-var http = require('http');
-var config = require('../class/config');
+const app = require('../app');
+const debug = require('debug')('parserFb:server');
+const http = require('http');
+const config = require('../class/config');
+
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || config.listenPort);
+const port = normalizePort(process.env.PORT || config.listenPort);
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-
-var io = require('socket.io')(server, {
+const io = require('socket.io')(server, {
   path: '/socket.io/',
   serveClient: false,
   // below are engine.IO options
@@ -34,24 +34,25 @@ var io = require('socket.io')(server, {
   pingTimeout: 5000,
   cookie: false
 });
-io.on('connection', function(socket){
+
+io.on('connection', function(socket) {
   console.log('A user connected');
-  socket.on("node add", function(msg){
-    console.log("Node add broadcast");
+  socket.on('node add', function(msg) {
+    console.log('Node add broadcast');
     socket.broadcast.emit('node add', msg);
   });
-  socket.on("edge add", function(msg){
-    console.log("Edge add broadcast");
+  socket.on('edge add', function(msg) {
+    console.log('Edge add broadcast');
     socket.broadcast.emit('edge add', msg);
   });
 
-  socket.on("TEST", function(msg){
-    console.log("TEST broadcast");
+  socket.on('TEST', function(msg) {
+    console.log('TEST broadcast');
     socket.broadcast.emit('TEST', msg);
   });
 });
 global.io = io;
-console.log("Socket initialized");
+console.log('Socket initialized');
 
 server.listen(port);
 server.on('error', onError);
@@ -62,7 +63,7 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -86,18 +87,16 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      console.error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:
@@ -110,9 +109,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  debug(`Listening on ${bind}`);
 }

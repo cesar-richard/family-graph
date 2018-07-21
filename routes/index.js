@@ -1,12 +1,15 @@
+/* eslint no-console: 0 */
 const express = require('express');
 
 const router = express.Router();
 const fs = require('fs');
 
+const cas = global.cas;
+
 function containsObject(obj, list) {
   let i;
   for (i = 0; i < list.length; i++) {
-    if (list[i].id == obj) {
+    if (list[i].id === obj) {
       return true;
     }
   }
@@ -23,14 +26,14 @@ router.get('/delete', cas.block, function(req, res, next) {
     connection.query(
       'INSERT INTO `visits` (`username`,`route`) VALUES (?,?);',
       [req.session[cas.session_name], 'delete'],
-      function(err, rows) {
-        if (err) console.error(err);
-        connection.query('SELECT * FROM `edges` WHERE `id` = ?;', [req.query.id], function(err, rows) {
-          if (err) console.error(err);
-          if (rows.length > 0) {
-            if (rows[0].creator == req.session[cas.session_name]) {
-              connection.query('DELETE FROM `edges` WHERE `id` = ?;', [req.query.id], function(err, rows) {
-                if (err) console.error(err);
+      function(err2, rows) {
+        if (err2) console.error(err2);
+        connection.query('SELECT * FROM `edges` WHERE `id` = ?;', [req.query.id], function(err3, rows2) {
+          if (err3) console.error(err3);
+          if (rows2.length > 0) {
+            if (rows2[0].creator === req.session[cas.session_name]) {
+              connection.query('DELETE FROM `edges` WHERE `id` = ?;', [req.query.id], function(err4, rows3) {
+                if (err4) console.error(err3);
                 connection.release();
                 res.send({ status: 'success' });
               });
@@ -54,23 +57,23 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
       console.error(err);
       return;
     }
-    connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err, rows) {
-      if (err) console.error(err);
+    connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err2, rows) {
+      if (err2) console.error(err2);
       connection.release();
       if (rows.length > 0) {
         res.send({ status: 'success', method: 'find', id: rows[0].id });
       } else {
-        global.pool.getConnection(function(err, connection2) {
-          if (err) {
-            console.error(err);
+        global.pool.getConnection(function(err3, connection2) {
+          if (err3) {
+            console.error(err3);
             return;
           }
           connection2.query('INSERT INTO `nodes` (`label`) VALUES (?);', [req.body.who], function(
-            err,
+            err4,
             rows2
           ) {
             connection2.release();
-            if (err) console.error(err);
+            if (err4) console.error(err4);
             global.io.emit('node add', {
               id: rows2.insertId,
               label: req.body.who,
@@ -94,14 +97,14 @@ router.get('/', cas.bounce, function(req, res, next) {
     connection.query(
       'INSERT INTO `visits` (`username`,`route`) VALUES (?,?);',
       [req.session[cas.session_name], 'add'],
-      function(err, rows) {
-        if (err) console.error(err);
+      function(err2, rows) {
+        if (err2) console.error(err2);
         connection.query(
           'SELECT `edges`.`id`,`n1`.`label` as `from`,`n2`.`label` as `to`,`edges`.`creator`,`edges`.`UPDATED_AT` FROM `edges`,`nodes` as `n1`, `nodes` as `n2` WHERE `edges`.`from` = `n1`.`id` AND `edges`.`to` = `n2`.`id` ORDER BY `from`, `to`;',
-          function(err, rows) {
-            if (err) console.error(err);
+          function(err3, rows2) {
+            if (err3) console.error(err3);
             connection.release();
-            res.render('form.html.twig', { links: rows, user: req.session[cas.session_name] });
+            res.render('form.html.twig', { links: rows2, user: req.session[cas.session_name] });
           }
         );
       }
@@ -118,8 +121,8 @@ router.get('/getnodes', function(req, res, next) {
     connection.query(
       'SELECT `label` FROM `nodes` WHERE UPPER(`label`) LIKE UPPER(?) ORDER BY `label` ASC;',
       [`%${req.query.term}%`],
-      function(err, rows) {
-        if (err) console.error(err);
+      function(err2, rows) {
+        if (err2) console.error(err2);
         connection.release();
         res.send(JSON.stringify(rows));
       }
@@ -137,8 +140,8 @@ router.post('/add', cas.block, function(req, res, next) {
     connection.query(
       'INSERT INTO `edges` (`from`,`to`,`creator`) VALUES (?,?,?);',
       [req.body.from, req.body.to, req.session[cas.session_name]],
-      function(err, rows) {
-        if (err) console.error(err);
+      function(err2, rows) {
+        if (err2) console.error(err2);
         connection.release();
         global.io.emit('edge add', {
           id: rows.insertId,
@@ -163,8 +166,8 @@ router.get('/view', cas.bounce, function(req, res, next) {
     connection.query(
       'INSERT INTO `visits` (`username`,`route`) VALUES (?,?);',
       [req.session[cas.session_name], 'view'],
-      function(err, rows) {
-        if (err) console.error(err);
+      function(err2, rows) {
+        if (err2) console.error(err2);
         connection.release();
         res.render('view.html.twig', { user: req.session[cas.session_name] });
       }
@@ -178,8 +181,8 @@ router.get('/nodes', cas.block, function(req, res, next) {
       console.error(err);
       return;
     }
-    connection.query('SELECT * FROM `nodes`;', function(err, nodes) {
-      if (err) console.error(err);
+    connection.query('SELECT * FROM `nodes`;', function(err2, nodes) {
+      if (err2) console.error(err2);
       connection.release();
       res.send(nodes);
     });
@@ -192,11 +195,11 @@ router.get('/edges', cas.block, function(req, res, next) {
       console.error(err);
       return;
     }
-    connection.query('SELECT * FROM `edges`;', function(err, edges) {
-      if (err) console.error(err);
+    connection.query('SELECT * FROM `edges`;', function(err2, edges) {
+      if (err2) console.error(err2);
       connection.release();
       edges.forEach(function(edge, index) {
-        edges[index].dashes = edge.dashes != 0;
+        edges[index].dashes = edge.dashes !== 0;
       });
       res.send(edges);
     });
@@ -213,10 +216,10 @@ router.post('/udpateNodePos', cas.block, function(req, res, next) {
     connection.query(
       'UPDATE `nodes` SET `x` = ?,`y` = ? WHERE `id` =?;',
       [req.body.x, req.body.y, req.body.id],
-      function(err, rows) {
+      function(err2, rows) {
         connection.release();
-        if (err) {
-          console.error(err);
+        if (err2) {
+          console.error(err2);
           res.send({ status: 'fail', id: req.body.id });
         } else {
           res.send({ status: 'success', id: req.body.id });
