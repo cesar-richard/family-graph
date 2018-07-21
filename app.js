@@ -36,12 +36,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 app.get('/logout', function(req, res) {
-  console.log(`User ${req.user.displayName} logged out.`);
+  console.log(`User ${req.user.displayName} logged out.`); // eslint-disable-line no-console
   req.logout();
   res.redirect('/');
 });
 
-console.log('Routes initialized');
+console.log('Routes initialized'); // eslint-disable-line no-console
 
 app.use(function(req, res, next) {
   const err = new Error('Not Found');
@@ -66,6 +66,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-console.log('Error handler initialized');
+console.log('Error handler initialized'); // eslint-disable-line no-console
 
 module.exports = app;
