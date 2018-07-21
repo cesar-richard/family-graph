@@ -3,24 +3,18 @@ const mysql = require('mysql');
 module.exports = {
   debug: true,
 
-  facebook: {
-    api_key: '1796577050626136',
-    api_secret: 'adc0b450fea5da242a6e4a7aa6802eba',
-    callback_url: 'http://node.crichard.fr/auth/facebook/callback'
-  },
-
   cas: {
     cas_url: 'https://cas.utc.fr/cas',
-    service_url: 'http://node.crichard.fr/',
+    service_url: process.env.url || 'http://node.crichard.fr/',
     cas_version: '2.0',
     session_info: 'cas_infos'
   },
 
   database: {
     host: 'localhost',
-    username: 'parserfb',
-    password: 'parserfb',
-    database: 'parserfb'
+    username: process.env.sqluser || 'parserfb',
+    password: process.env.sqlpass || 'parserfb',
+    database: process.env.sqlbase || 'parserfb'
   },
 
   listenPort: 3651,
