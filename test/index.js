@@ -40,8 +40,8 @@ describe('HTML', () => {
 });
 
 describe('API', () => {
-   describe('/nodes', () => {
-it('should return nodes list', done => {
+  describe('/nodes', () => {
+    it('should return nodes list', done => {
       chai
         .request(server)
         .get('/nodes')
@@ -55,10 +55,10 @@ it('should return nodes list', done => {
           done(new Error(err));
         });
     });
-   });
+  });
 
-   describe('/edges', () => {
-it('should return edges list', done => {
+  describe('/edges', () => {
+    it('should return edges list', done => {
       chai
         .request(server)
         .get('/edges')
@@ -72,5 +72,5 @@ it('should return edges list', done => {
           done(new Error(err));
         });
     });
-   });
+  });
 });
