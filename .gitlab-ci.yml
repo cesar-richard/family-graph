@@ -29,14 +29,14 @@ test:codecov:
   script:
     - npm install -g codecov
     - npm install
-    - npm run coveralls
+    - sqlhost=mysql sqluser=root sqlpass=$MYSQL_ROOT_PASSWORD sqlbase=$MYSQL_DATABASE npm run coveralls
 
 test:coveralls:
   stage: test
   script:
     - npm install -g coveralls
     - npm install
-    - npm test && codecov
+    - sqlhost=mysql sqluser=root sqlpass=$MYSQL_ROOT_PASSWORD sqlbase=$MYSQL_DATABASE npm test && codecov
 
 lint:
   stage: extra
