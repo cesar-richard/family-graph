@@ -23,7 +23,7 @@ module.exports = {
   listenPort: 3651,
 
   init() {
-    /*Array.prototype.contains = function(element) {
+    /* Array.prototype.contains = function(element) {
       return this.indexOf(element) > -1;
     };
     Array.prototype.findObjectByProp = function _findObjectByProp(prop, value) {
@@ -38,7 +38,7 @@ module.exports = {
     Array.prototype.extend = function _extendArray(array) {
       if (typeof array === 'undefined') throw new Error('Argument 1 (and only) must be an array');
       this.push.apply(this, array); // eslint-disable-line prefer-spread
-    };*/
+    }; */
     const pool = mysql.createPool({
       connectionLimit: 50,
       host: this.database.host,
