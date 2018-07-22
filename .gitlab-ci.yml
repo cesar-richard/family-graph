@@ -20,21 +20,12 @@ stages:
   - test
   - extra
 
-mysql_connect:
-  stage: init
-  image: mysql
-  before_script:
-    - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./struct.sql
-  script:
-    - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE -e "SHOW TABLES;"
-
 migrations:
   stage: init
   before_script:
     - npm install
   script:
     - npm run migrations
-
 
 codecov:
   stage: test
