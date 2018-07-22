@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Dim 22 Juillet 2018 à 01:25
+-- Généré le: Dim 22 Juillet 2018 à 16:54
 -- Version du serveur: 5.6.34
 -- Version de PHP: 5.4.45-0+deb7u14
 
@@ -13,8 +13,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données: `family-graph`
 --
-
--- USE family-graph;
 
 -- --------------------------------------------------------
 
@@ -60,4 +58,4 @@ CREATE TABLE IF NOT EXISTS `visits` (
   `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `route` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=346 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=355 ;
