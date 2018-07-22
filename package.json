@@ -59,7 +59,9 @@
     "outdated": "npm outdated --depth 0",
     "pretest": "",
     "prestart": "npm run lint",
-    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha --require babel-core/register test/app.js && npm run nsp"
+    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha --require babel-core/register test/app.js && npm run nsp",
+    "create-migration": "./node_modules/.bin/sequelize migration:create --name='my-migration-name' --config ./migrations/config.js --migrations-path ./migrations/migrations",
+    "migrations": "./node_modules/.bin/sequelize --config ./migrations/config.js --migrations-path ./migrations/migrations db:migrate"
   },
   "cacheDirectories": [
     "node_modules"
