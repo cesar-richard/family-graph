@@ -17,7 +17,8 @@ module.exports = {
     host: process.env.sqlhost || 'localhost',
     username: process.env.sqluser || 'parserfb',
     password: process.env.sqlpass || 'parserfb',
-    database: process.env.sqlbase || 'parserfb'
+    database: process.env.sqlbase || 'parserfb',
+    insecureAuth : true
   },
 
   listenPort: 3651,
@@ -44,7 +45,8 @@ module.exports = {
       host: this.database.host,
       user: this.database.username,
       password: this.database.password,
-      database: this.database.database
+      database: this.database.database,
+      insecureAuth: this.database.insecureAuth
     });
     global.pool = pool;
   }
