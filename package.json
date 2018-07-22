@@ -25,6 +25,7 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^3.5.0",
     "chai-http": "^4.0.0",
+    "coffeescript": "^2.3.1",
     "coveralls": "^3.0.2",
     "dictum.js": "^1.0.0",
     "dotenv": "^4.0.0",
