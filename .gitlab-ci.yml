@@ -17,27 +17,34 @@ stages:
   - test
   - extra
 
-test:mysql_connect:
+mysql_connect:
   stage: init
   image: mysql
   script:
     - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
-    - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./test/struct.sql
+    - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./struct.sql
 
-test:node:
+test:codecov:
   stage: test
   script:
     - npm install -g codecov
     - npm install
+    - npm run coveralls
+
+test:coveralls:
+  stage: test
+  script:
+    - npm install -g coveralls
+    - npm install
     - npm test && codecov
 
-test:lint:
+lint:
   stage: extra
   script:
     - npm install
     - npm run lint
 
-test:vulnerabilities:
+vulnerabilities:
   stage: extra
   script:
     - npm install
