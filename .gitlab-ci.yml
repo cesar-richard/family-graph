@@ -43,7 +43,7 @@ codecov:
     - npm run migrations
     - npm install -g codecov
   script:
-    - npm run coveralls
+    - npm test && codecov
 
 coveralls:
   stage: test
@@ -52,7 +52,7 @@ coveralls:
     - npm run migrations
     - npm install -g coveralls
   script:
-    - npm test && codecov
+    - npm run coveralls
 
 lint:
   stage: extra
