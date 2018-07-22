@@ -22,7 +22,7 @@ stages:
   - extra
 
 mysql_connect:
-  stage: extra
+  stage: init
   image: mysql
   script:
     - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
@@ -30,16 +30,13 @@ mysql_connect:
 
 test:codecov:
   stage: test
-  image: mysql
   script:
-    - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./struct.sql
     - npm install -g codecov
     - npm install
     - npm run coveralls
 
 test:coveralls:
   stage: test
-  image: mysql
   script:
     - npm install -g coveralls
     - npm install
