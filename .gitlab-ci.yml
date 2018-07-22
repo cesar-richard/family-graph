@@ -26,8 +26,7 @@ mysql_connect:
   image: mysql
   script:
     - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql mysql -e "SET PASSWORD FOR 'root'@'%' = OLD_PASSWORD('$MYSQL_ROOT_PASSWORD');"
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql mysql -e "FLUSH PRIVILEGES;"
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "SET PASSWORD FOR 'root'@'%' = OLD_PASSWORD('$MYSQL_ROOT_PASSWORD');FLUSH PRIVILEGES;"
     - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./struct.sql
 
 test:codecov:
