@@ -1,7 +1,6 @@
 const config = require('./../config');
-console.log(config);
 module.exports = {
-  [config.environment]: Object.assign({}, config.database, {
+  [config.environment]: Object.assign({}, config.common.database, {
     dialect: 'mysql'
   })
 };
