@@ -21,6 +21,9 @@ module.exports = {
       dashes: {
         type: Sequelize.BOOLEAN
       },
+      creator: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         type: Sequelize.DATE
       },
