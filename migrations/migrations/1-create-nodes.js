@@ -23,7 +23,10 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE
-      }
+      },
+      UPDATED_AT: {
+        type: Sequelize.DATE
+      },
     });
   },
   down(queryInterface, Sequelize) {
