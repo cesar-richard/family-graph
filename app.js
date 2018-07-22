@@ -11,18 +11,8 @@ const session = require('express-session');
 const CASAuthentication = require('cas-authentication');
 
 const cas = new CASAuthentication(config.cas);
-const fakeCas = {
-  session_name: 'session',
-  block(req, res, next) {
-    req.session[this.session_name] = 'testuser';
-    next();
-  },
-  bounce(req, res, next) {
-    req.session[this.session_name] = 'testuser';
-    next();
-  }
-};
-global.cas = process.env.NODE_ENV === 'testing' ? fakeCas : cas;
+
+global.cas = cas;
 
 const routes = require('./routes/index');
 
@@ -54,21 +44,11 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error.html.twig', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error.html.twig', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 console.log('Error handler initialized'); // eslint-disable-line no-console
