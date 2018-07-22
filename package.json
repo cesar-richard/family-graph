@@ -49,7 +49,7 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "cover": "NODE_ENV=testing istanbul cover ./node_modules/mocha/bin/_mocha -- --require babel-core/register test/app.js",
+    "cover": "NODE_ENV=testing istanbul cover ./node_modules/mocha/bin/_mocha --exit -- --require babel-core/register test/app.js",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "nsp": "./node_modules/.bin/nsp check",
@@ -60,7 +60,7 @@
     "outdated": "npm outdated --depth 0",
     "pretest": "",
     "prestart": "npm run lint",
-    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha --require babel-core/register test/app.js && npm run nsp",
+    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha --exit --require babel-core/register test/app.js && npm run nsp",
     "create-migration": "./node_modules/.bin/sequelize migration:create --name='my-migration-name' --config ./migrations/config.js --migrations-path ./migrations/migrations",
     "migrations": "./node_modules/.bin/sequelize --config ./migrations/config.js --migrations-path ./migrations/migrations db:migrate"
   },
