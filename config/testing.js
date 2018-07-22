@@ -5,7 +5,7 @@ exports.config = {
     port: 8081,
     database: {
       name: process.env.MYSQL_DATABASE,
-      host: process.env.sqlhost,
+      host: process.env.sqlhost||'mysql',
       username: process.env.sqluser,
       password: process.env.MYSQL_ROOT_PASSWORD
     },
