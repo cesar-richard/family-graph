@@ -8,6 +8,9 @@ module.exports = {
     service_url: process.env.url || 'http://node.crichard.fr/',
     cas_version: '2.0',
     session_info: 'cas_infos'
+    is_dev_mode     : process.env.NODE_ENV === 'testing' ? true : false,
+    dev_mode_user   : 'testUser',
+    dev_mode_info   : ""
   },
 
   database: {
