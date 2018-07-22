@@ -43,16 +43,7 @@ codecov:
     - npm run migrations
     - npm install -g codecov
   script:
-    - npm test && codecov
-
-coveralls:
-  stage: test
-  before_script:
-    - npm install
-    - npm run migrations
-    - npm install -g coveralls
-  script:
-    - npm run coveralls
+    - npm run coverage && codecov
 
 lint:
   stage: extra
