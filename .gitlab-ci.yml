@@ -22,7 +22,7 @@ stages:
   - extra
 
 mysql_connect:
-  stage: init
+  stage: extra
   image: mysql
   before_script:
     - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./struct.sql
