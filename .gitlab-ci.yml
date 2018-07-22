@@ -30,19 +30,19 @@ mysql_connect:
 test:codecov:
   stage: test
   before_script:
-    - npm install -g codecov sequelize
+    - npm install -g codecov
+    - npm install
     - npm run migrations
   script:
-    - npm install
     - npm run coveralls
 
 test:coveralls:
   stage: test
   before_script:
-    - npm install -g coveralls sequelize
+    - npm install -g coveralls
+    - npm install
     - npm run migrations
   script:
-    - npm install
     - npm test && codecov
 
 lint:
