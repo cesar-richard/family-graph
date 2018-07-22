@@ -44,21 +44,11 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error.html.twig', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error.html.twig', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 console.log('Error handler initialized'); // eslint-disable-line no-console
