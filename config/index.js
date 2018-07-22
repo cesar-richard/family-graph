@@ -29,17 +29,16 @@ const config = {
   common: {
     port: 3651,
     database: {
-      //url: process.env.NODE_API_DB_URL,
-      host: process.env.NODE_API_DB_HOST,
-      port: process.env.NODE_API_DB_PORT,
-      name: process.env.NODE_API_DB_NAME,
-      username: process.env.NODE_API_DB_USERNAME,
-      password: process.env.NODE_API_DB_PASSWORD,
+      host: process.env.sqlhost||"localhost",
+      port: process.env.NODE_API_DB_PORT||3306,
+      name: process.env.MYSQL_DATABASE,
+      username: process.env.sqluser||"root",
+      password: process.env.MYSQL_ROOT_PASSWORD||"mysql_strong_password",
       dialect: 'mysql'
     },
     session: {
       header_name: 'authorization',
-      secret: process.env.NODE_API_SESSION_SECRET
+      secret: process.env.NODE_API_SESSION_SECRET||'NobodyEverKnows'
     },
     cas: {
       cas_url: 'https://cas.utc.fr/cas',
@@ -51,4 +50,5 @@ const config = {
 };
 
 const customConfig = require(configFile).config;
+console.log(customConfig);
 module.exports = assignObject(customConfig, config);
