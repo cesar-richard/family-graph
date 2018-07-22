@@ -28,8 +28,15 @@ mysql_connect:
   script:
     - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE -e "SHOW TABLES;"
 
+test:migrations:
+  stage: init
+  before_script:
+    - npm install
+    - npm run migrations
+
+
 test:codecov:
-  stage: test
+  stage: extra
   before_script:
     - npm install
     - npm run migrations
@@ -38,7 +45,7 @@ test:codecov:
     - npm run coveralls
 
 test:coveralls:
-  stage: test
+  stage: extra
   before_script:
     - npm install
     - npm run migrations
