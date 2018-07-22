@@ -50,4 +50,5 @@ const config = {
 };
 
 const customConfig = require(configFile).config;
+console.log(customConfig);
 module.exports = assignObject(customConfig, config);
