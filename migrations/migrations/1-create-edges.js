@@ -32,7 +32,7 @@ module.exports = {
       },
       UPDATED_AT: {
         type: Sequelize.DATE
-      },
+      }
     });
   },
   down(queryInterface, Sequelize) {
