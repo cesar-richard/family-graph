@@ -9,8 +9,6 @@ variables:
   CODECOV_TOKEN: cc074b5e-0c59-4e4e-822e-0b2464274e70
   sqlhost: mysql
   sqluser: root
-  sqlpass: mysql_strong_password
-  sqlbase: family-graph
 
 cache:
   paths:
@@ -32,18 +30,18 @@ mysql_connect:
 test:codecov:
   stage: test
   before_script:
+    - npm install -g codecov sequelize
     - npm run migrations
   script:
-    - npm install -g codecov
     - npm install
     - npm run coveralls
 
 test:coveralls:
   stage: test
   before_script:
+    - npm install -g coveralls sequelize
     - npm run migrations
   script:
-    - npm install -g coveralls
     - npm install
     - npm test && codecov
 

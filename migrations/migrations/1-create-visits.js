@@ -2,24 +2,21 @@
 
 module.exports = {
   up(queryInterface, Sequelize) {
-    return queryInterface.createTable('categories', {
+    return queryInterface.createTable('visits', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      username: {
         type: Sequelize.STRING
       },
-      associationId: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        allowNull: false,
-        references: {
-          model: 'associations',
-          key: 'id'
-        }
+      when: {
+        type: Sequelize.DATE
+      },
+      route: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +29,6 @@ module.exports = {
     });
   },
   down(queryInterface, Sequelize) {
-    return queryInterface.dropTable('categories');
+    return queryInterface.dropTable('visits');
   }
 };
