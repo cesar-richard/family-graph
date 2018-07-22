@@ -1,6 +1,6 @@
-const user = require('./edges'),
-  article = require('./nodes'),
-  category = require('./visits');
+const edges = require('./edges'),
+  nodes = require('./nodes'),
+  visits = require('./visits');
 
 exports.define = db => {
   edges.getModel(db);
