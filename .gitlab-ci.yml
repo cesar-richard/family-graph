@@ -15,6 +15,7 @@ cache:
 stages:
   - init
   - test
+  - extra
 
 test:mysql_connect:
   stage: init
@@ -23,21 +24,21 @@ test:mysql_connect:
     - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
     - mysql -B --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < ./test/struct.sql
 
-test:lint:
-  stage: test
-  script:
-    - npm install
-    - npm run lint
-
-test:vulnerabilities:
-  stage: test
-  script:
-    - npm install
-    - npm run nsp
-
 test:node:
   stage: test
   script:
     - npm install -g codecov
     - npm install
     - npm test && codecov
+
+test:lint:
+  stage: extra
+  script:
+    - npm install
+    - npm run lint
+
+test:vulnerabilities:
+  stage: extra
+  script:
+    - npm install
+    - npm run nsp
