@@ -1,34 +1,51 @@
 image: node:latest
 
 services:
-  - mysql:latest
+  - mysql:5.7
 
 variables:
+  NODE_ENV: "testing"
   MYSQL_DATABASE: family-graph
   MYSQL_ROOT_PASSWORD: mysql_strong_password
   CODECOV_TOKEN: cc074b5e-0c59-4e4e-822e-0b2464274e70
+  sqlhost: mysql
+  sqluser: root
 
 cache:
   paths:
   - node_modules/
 
-test:lint:
-  script:
+stages:
+  - init
+  - test
+  - extra
+
+migrations:
+  stage: init
+  before_script:
     - npm install
+  script:
+    - npm run migrations
+
+codecov:
+  stage: test
+  before_script:
+    - npm install
+    - npm run migrations
+    - npm install -g codecov
+  script:
+    - npm run coverage && codecov
+
+lint:
+  stage: extra
+  before_script:
+    - npm install
+  script:
     - npm run lint
 
-test:vulnerabilities:
-  script:
+vulnerabilities:
+  stage: extra
+  before_script:
     - npm install
+  script:
     - npm run nsp
-
-test:mysql_connect:
-  image: mysql
-  script:
-  - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
-
-test:node:
-  script:
-    - npm install -g codecov
-    - npm install
-    - npm test && codecov
