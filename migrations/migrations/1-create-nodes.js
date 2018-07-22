@@ -9,14 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      label: {
         type: Sequelize.STRING
       },
-      when: {
-        type: Sequelize.DATE
+      x: {
+        type: Sequelize.FLOAT
       },
-      route: {
-        type: Sequelize.STRING
+      y: {
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +29,6 @@ module.exports = {
     });
   },
   down(queryInterface, Sequelize) {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('nodes');
   }
 };
