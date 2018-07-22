@@ -4,7 +4,7 @@ exports.config = {
   common: {
     port: 8081,
     database: {
-      name: process.env.NODE_API_DB_NAME_TEST
+      name: process.env.MYSQL_DATABASE
     },
     cas: {
       is_dev_mode: true,
