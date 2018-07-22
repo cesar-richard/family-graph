@@ -4,6 +4,23 @@ const chai = require('chai'),
   should = chai.should();
 
 describe('HTML', () => {
+  describe('/NOTHINGATALL', () => {
+    it('should return 404 page', done => {
+      chai
+        .request(server)
+        .get('/NOTHINGATALL')
+        .then(res => {
+          res.should.have.status(404);
+          res.should.be.html;
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+    });
+  });
+
   describe('/', () => {
     it('should return home page', done => {
       chai
