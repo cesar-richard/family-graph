@@ -19,6 +19,10 @@ stages:
   - test
   - extra
 
+before_script:
+  - npm install
+  - npm run migrations
+
 mysql_connect:
   stage: extra
   image: mysql
@@ -31,8 +35,6 @@ test:codecov:
   stage: test
   before_script:
     - npm install -g codecov
-    - npm install
-    - npm run migrations
   script:
     - npm run coveralls
 
@@ -40,8 +42,6 @@ test:coveralls:
   stage: test
   before_script:
     - npm install -g coveralls
-    - npm install
-    - npm run migrations
   script:
     - npm test && codecov
 
