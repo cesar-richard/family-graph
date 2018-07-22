@@ -1,13 +1,13 @@
 const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
-  should = chai.should();
+  should = chai.should(),
+  request = chai.request(server);
 
 describe('HTML', () => {
   describe('/', () => {
     it('should return home page', done => {
-      chai
-        .request(server)
+      request
         .get('/')
         .then(res => {
           res.should.have.status(200);
@@ -23,8 +23,7 @@ describe('HTML', () => {
 
   describe('/view', () => {
     it('should return graph page', done => {
-      chai
-        .request(server)
+      request
         .get('/view')
         .then(res => {
           res.should.have.status(200);
@@ -42,8 +41,7 @@ describe('HTML', () => {
 describe('API', () => {
   describe('/nodes', () => {
     it('should return nodes list', done => {
-      chai
-        .request(server)
+      request
         .get('/nodes')
         .then(res => {
           res.should.have.status(200);
@@ -59,8 +57,7 @@ describe('API', () => {
 
   describe('/edges', () => {
     it('should return edges list', done => {
-      chai
-        .request(server)
+      request
         .get('/edges')
         .then(res => {
           res.should.have.status(200);
@@ -74,3 +71,5 @@ describe('API', () => {
     });
   });
 });
+
+after(() => request.server.close());
