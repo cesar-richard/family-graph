@@ -5,7 +5,8 @@ exports.getModel = db => {
     from: Sequelize.INTEGER,
     to: Sequelize.INTEGER,
     arrows: Sequelize.STRING,
-    dashes: Sequelize.BOOLEAN
+    dashes: Sequelize.BOOLEAN,
+    creator: Sequelize.STRING
   });
   edges.associate = function(models) {};
   return edges;

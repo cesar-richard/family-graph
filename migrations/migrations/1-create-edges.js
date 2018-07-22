@@ -21,14 +21,18 @@ module.exports = {
       dashes: {
         type: Sequelize.BOOLEAN
       },
+      creator: {
+        type: Sequelize.STRING
+      },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+      UPDATED_AT: {
+        type: Sequelize.DATE
+      },
     });
   },
   down(queryInterface, Sequelize) {
