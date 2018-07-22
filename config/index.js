@@ -31,7 +31,7 @@ const config = {
     database: {
       host: process.env.sqlhost,
       port: process.env.NODE_API_DB_PORT,
-      name: process.env.MYSQL_DATABASE,
+      database: process.env.MYSQL_DATABASE,
       username: process.env.sqluser,
       password: process.env.MYSQL_ROOT_PASSWORD,
       dialect: 'mysql'
