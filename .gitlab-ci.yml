@@ -4,6 +4,7 @@ services:
   - mysql:5.7
 
 variables:
+  NODE_ENV: "testing"
   MYSQL_DATABASE: family-graph
   MYSQL_ROOT_PASSWORD: mysql_strong_password
   CODECOV_TOKEN: cc074b5e-0c59-4e4e-822e-0b2464274e70
