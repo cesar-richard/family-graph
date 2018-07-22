@@ -49,8 +49,7 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "cover": "NODE_ENV=testing istanbul cover ./node_modules/mocha/bin/_mocha --exit -- --require babel-core/register test/app.js",
-    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "coverage": "node_modules/.bin/istanbul cover test/app.js",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "nsp": "./node_modules/.bin/nsp check",
     "lint": "./node_modules/eslint/bin/eslint.js \"**/*.js\"",
