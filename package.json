@@ -49,7 +49,7 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "coverage": "node_modules/.bin/istanbul cover test/app.js",
+    "coverage": "NODE_ENV=testing istanbul cover node_modules/.bin/_mocha -- --exit -u exports -R spec test/app.js &&  codecov",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "nsp": "./node_modules/.bin/nsp check",
     "lint": "./node_modules/eslint/bin/eslint.js \"**/*.js\"",
