@@ -16,12 +16,11 @@ cache:
   - node_modules/
 
 stages:
-  - init
   - test
   - deploy
 
 migrations:
-  stage: init
+  stage: test
   before_script:
     - npm install
   script:
@@ -38,6 +37,7 @@ codecov:
 
 lint:
   stage: test
+  services: []
   before_script:
     - npm install
   script:
@@ -45,6 +45,7 @@ lint:
 
 vulnerabilities:
   stage: test
+  services: []
   before_script:
     - npm install
   script:
@@ -53,6 +54,7 @@ vulnerabilities:
 deploy to production:
   stage: deploy
   environment: Production
+  services: []
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
@@ -71,6 +73,7 @@ deploy to production:
 deploy to stage:
   stage: deploy
   environment: Staging
+  services: []
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
