@@ -16,67 +16,73 @@ cache:
   - node_modules/
 
 stages:
-  - init
   - test
-  - extra
   - deploy
 
-migrations:
-  stage: init
-  before_script:
-    - npm install
-  script:
-    - npm run migrations
+#migrations:
+#  stage: test
+#  before_script:
+#    - npm install
+#  script:
+#    - npm run migrations
 
-codecov:
-  stage: test
-  before_script:
-    - npm install
-    - npm run migrations
-    - npm install -g codecov
-  script:
-    - npm run coverage && codecov
+#codecov:
+#  stage: test
+#  before_script:
+#    - npm install
+#    - npm run migrations
+#    - npm install -g codecov
+#  script:
+#    - npm run coverage && codecov
 
-lint:
-  stage: extra
-  before_script:
-    - npm install
-  script:
-    - npm run lint
+#lint:
+#  stage: test
+#  services: []
+#  before_script:
+#    - npm install
+#  script:
+#    - npm run lint
 
-vulnerabilities:
-  stage: extra
-  before_script:
-    - npm install
-  script:
-    - npm run nsp
+#vulnerabilities:
+#  stage: test
+#  services: []
+#  before_script:
+#    - npm install
+#  script:
+#    - npm run nsp
 
 deploy to production:
   stage: deploy
+  environment: Production
+  services: []
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - echo $SSH_PRIVATE_KEY
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
   script:
-    - git
+    - rm ./package-lock.json
+    - npm install
+    - scp -o 'StrictHostKeyChecking no' -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/prod
   only:
     - master
 
 deploy to stage:
   stage: deploy
+  environment: Staging
+  services: []
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - echo $SSH_PRIVATE_KEY
+    - ssh-add <(echo $SSH_PRIVATE_KEY)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
   script:
-    - npm run nsp
+    - rm ./package-lock.json
+    - npm install
+    - scp -o 'StrictHostKeyChecking no' -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/stage
   only:
     - develop
