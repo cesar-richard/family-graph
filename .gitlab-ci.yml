@@ -53,6 +53,7 @@ vulnerabilities:
 
 deploy to production:
   stage: deploy
+  environment: Production
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
@@ -62,13 +63,15 @@ deploy to production:
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - git remote add prod ssh://cesar@crichard.fr/home/cesar/gitBare/prod.git
-    - git push prod master
+    - rm ./package-lock.json
+    - npm install
+    - scp -o stricthostkeychecking=no -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/prod
   only:
     - master
 
 deploy to stage:
   stage: deploy
+  environment: Staging
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
@@ -78,7 +81,8 @@ deploy to stage:
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - git remote add stage ssh://cesar@crichard.fr/home/cesar/gitBare/stage.git
-    - git push stage develop
+    - rm ./package-lock.json
+    - npm install
+    - scp -o stricthostkeychecking=no -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/stage
   only:
     - develop
