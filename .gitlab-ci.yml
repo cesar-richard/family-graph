@@ -57,7 +57,7 @@ deploy to production:
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
@@ -65,7 +65,7 @@ deploy to production:
   script:
     - rm ./package-lock.json
     - npm install
-    - scp -o stricthostkeychecking=no -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/prod
+    - scp -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/prod
   only:
     - master
 
@@ -75,7 +75,7 @@ deploy to stage:
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
@@ -83,6 +83,6 @@ deploy to stage:
   script:
     - rm ./package-lock.json
     - npm install
-    - scp -o stricthostkeychecking=no -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/stage
+    - scp -r . $DEPLOY_USER@$DEPLOY_DOMAIN:$DEPLOY_PATH/stage
   only:
     - develop
