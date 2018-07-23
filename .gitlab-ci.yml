@@ -18,7 +18,6 @@ cache:
 stages:
   - init
   - test
-  - extra
   - deploy
 
 migrations:
@@ -38,14 +37,14 @@ codecov:
     - npm run coverage && codecov
 
 lint:
-  stage: extra
+  stage: test
   before_script:
     - npm install
   script:
     - npm run lint
 
 vulnerabilities:
-  stage: extra
+  stage: test
   before_script:
     - npm install
   script:
@@ -75,7 +74,8 @@ deploy to stage:
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - echo $SSH_PRIVATE_KEY
+    - ssh-add <(echo $SSH_PRIVATE_KEY)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
