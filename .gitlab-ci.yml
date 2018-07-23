@@ -62,7 +62,8 @@ deploy to production:
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - git
+    - git remote add prod ssh://cesar@crichard.fr/home/cesar/gitBare/prod.git
+    - git push prod master
   only:
     - master
 
@@ -77,6 +78,7 @@ deploy to stage:
     - ssh-keyscan $DEPLOY_DOMAIN >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - npm run nsp
+    - git remote add stage ssh://cesar@crichard.fr/home/cesar/gitBare/stage.git
+    - git push stage develop
   only:
     - develop
