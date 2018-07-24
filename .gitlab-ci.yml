@@ -16,12 +16,10 @@ cache:
   - node_modules/
 
 stages:
-  - init
   - test
-  - extra
 
 migrations:
-  stage: init
+  stage: test
   before_script:
     - npm install
   script:
@@ -37,14 +35,16 @@ codecov:
     - npm run coverage && codecov
 
 lint:
-  stage: extra
+  stage: test
+  services: []
   before_script:
     - npm install
   script:
     - npm run lint
 
 vulnerabilities:
-  stage: extra
+  stage: test
+  services: []
   before_script:
     - npm install
   script:

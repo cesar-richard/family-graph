@@ -17,7 +17,7 @@ module.exports = {
     host: process.env.sqlhost || 'localhost',
     username: process.env.sqluser || 'parserfb',
     password: process.env.MYSQL_ROOT_PASSWORD || 'parserfb',
-    database: process.env.MYSQL_DATABASE || 'parserfb'
+    database: process.env.MYSQL_DATABASE || 'develop'
   },
 
   listenPort: 3651,
