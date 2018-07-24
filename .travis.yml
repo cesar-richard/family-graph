@@ -1,11 +1,24 @@
 language: node_js # Sets which engine use to build the project
 node_js: "node" # Specifies node version to use "node"="latest"
+addons:
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+      - mysql-client
 service: mysql
 cache:
   directories:
     - "node_modules"
   yarn: true
+
+before_script:
+  - cp ./migrations/config.js.travis ./migrations/config.js
+  - cp ./config/.env.travis ./config/.env
+  - mysql -e "CREATE DATABASE family-graph;"
 script:
   - npm i -g codecov
+  - npm run migrations
   - npm run coverage
   - codecov
