@@ -192,7 +192,7 @@ describe('API', () => {
         });
     });
 
-    it('should return 500', done => {
+    it('should return 404', done => {
       chai
         .request(server)
         .get('/delete')
