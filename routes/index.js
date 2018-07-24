@@ -13,22 +13,15 @@ router.get('/delete', cas.block, function(req, res, next) {
       [req.session[cas.session_name], 'delete'],
       function(err2, rows) {
         connection.query('SELECT * FROM `edges` WHERE `id` = ?;', [req.query.id], function(err3, rows2) {
-          if (rows2.length > 0) {
-            if (rows2[0].creator === req.session[cas.session_name]) {
-              connection.query('DELETE FROM `edges` WHERE `id` = ?;', [req.query.id], function(err4, rows3) {
-                if (err4) console.error(err3);
-                connection.release();
-                res.send({ status: 'success' });
-              });
-            } else {
+          if (rows2.length > 0 && rows2[0].creator === req.session[cas.session_name]) {
+            connection.query('DELETE FROM `edges` WHERE `id` = ?;', [req.query.id], function(err4, rows3) {
+              if (err4) console.error(err3);
               connection.release();
-              res.status(500);
-              res.send({ status: 'fail', message: 'error' });
-            }
+              res.send({ status: 'success' });
+            });
           } else {
             connection.release();
-            res.status(404);
-            res.send({ status: 'fail', message: 'not found' });
+            res.status(404).send({ status: 'fail', message: 'not found' });
           }
         });
       }
@@ -89,6 +82,7 @@ router.get('/getnodes', function(req, res, next) {
       [`%${req.query.term}%`],
       function(err2, rows) {
         connection.release();
+        res.type('application/json');
         res.send(JSON.stringify(rows));
       }
     );
@@ -159,12 +153,12 @@ router.post('/udpateNodePos', cas.block, function(req, res, next) {
       [req.body.x, req.body.y, req.body.id],
       function(err2, rows) {
         connection.release();
-        if (err2||rows.affectedRows===0) {
+        if (err2 || rows.affectedRows === 0) {
           console.error(err2);
           res.status(404);
           res.send({ status: 'fail' });
         } else {
-            res.send({ status: 'success', id: req.body.id });
+          res.send({ status: 'success', id: req.body.id });
         }
       }
     );
