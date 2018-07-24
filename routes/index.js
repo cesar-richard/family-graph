@@ -95,7 +95,6 @@ router.post('/add', cas.block, function(req, res, next) {
       'INSERT INTO `edges` (`from`,`to`,`creator`) VALUES (?,?,?);',
       [req.body.from, req.body.to, req.session[cas.session_name]],
       function(err2, rows) {
-        console.log(err2);
         connection.release();
         global.io.emit('edge add', {
           id: rows.insertId,
