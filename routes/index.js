@@ -8,6 +8,7 @@ const cas = global.cas;
 
 router.get('/delete', cas.block, function(req, res, next) {
   global.pool.getConnection(function(err, connection) {
+    console.log(err);
     connection.query(
       'INSERT INTO `visits` (`username`,`route`) VALUES (?,?);',
       [req.session[cas.session_name], 'delete'],
