@@ -22,11 +22,13 @@ router.get('/delete', cas.block, function(req, res, next) {
               });
             } else {
               connection.release();
-              res.send({ status: 'fail' });
+              res.status(500);
+              res.send({ status: 'fail', message: 'error' });
             }
           } else {
             connection.release();
-            res.send({ status: 'fail' });
+            res.status(404);
+            res.send({ status: 'fail', message: 'not found' });
           }
         });
       }
@@ -52,6 +54,7 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
               label: req.body.who,
               color: { background: '#F03967', border: '#713E7F' }
             });
+            res.status(201);
             res.send({ status: 'success', method: 'create', id: rows2.insertId });
           });
         });
@@ -156,11 +159,12 @@ router.post('/udpateNodePos', cas.block, function(req, res, next) {
       [req.body.x, req.body.y, req.body.id],
       function(err2, rows) {
         connection.release();
-        if (err2) {
+        if (err2||rows.affectedRows===0) {
           console.error(err2);
-          res.send({ status: 'fail', id: req.body.id });
+          res.status(404);
+          res.send({ status: 'fail' });
         } else {
-          res.send({ status: 'success', id: req.body.id });
+            res.send({ status: 'success', id: req.body.id });
         }
       }
     );
