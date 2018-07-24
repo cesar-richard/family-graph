@@ -97,6 +97,26 @@ describe('API', () => {
     });
   });
 
+  describe('/getnodes', () => {
+    it('should return node array containing node', done => {
+      chai
+        .request(server)
+        .get('/getnodes')
+        .query({ term: 'B' })
+        .then(res => {
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.be.a('array');
+          res.body[0].should.have.property('label').that.equals('B');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+    });
+  });
+
   describe('/add', () => {
     it('should find node and return 200', done => {
       chai
@@ -190,7 +210,6 @@ describe('API', () => {
         });
     });
   });
-
 
   describe('/udpateNodePos', () => {
     it('should update node position and return 200', done => {
