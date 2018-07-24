@@ -32,7 +32,8 @@ codecov:
     - npm run migrations
     - npm install -g codecov
   script:
-    - npm run coverage && codecov
+    - npm run coverage
+    - codecov
 
 lint:
   stage: test
