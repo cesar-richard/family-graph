@@ -45,7 +45,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
+  res.status(err.status);
   res.render('error.html.twig', {
     message: err.message,
     error: err
