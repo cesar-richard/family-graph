@@ -122,7 +122,7 @@ describe('API', () => {
       chai
         .request(server)
         .post('/add')
-        .send({ from: 'AA', to: 'AB' })
+        .send({ from: 1, to: 1 })
         .then(res => {
           res.should.have.status(200);
           res.should.be.json;
