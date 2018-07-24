@@ -1,3 +1,5 @@
 app/dist
 node_modules
 app/views/public/libs
+coverage
+docs

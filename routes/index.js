@@ -15,7 +15,6 @@ router.get('/delete', cas.block, function(req, res, next) {
         connection.query('SELECT * FROM `edges` WHERE `id` = ?;', [req.query.id], function(err3, rows2) {
           if (rows2.length > 0 && rows2[0].creator === req.session[cas.session_name]) {
             connection.query('DELETE FROM `edges` WHERE `id` = ?;', [req.query.id], function(err4, rows3) {
-              if (err4) console.error(err3);
               connection.release();
               res.send({ status: 'success' });
             });
