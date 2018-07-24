@@ -1,5 +1,12 @@
 language: node_js # Sets which engine use to build the project
 node_js: "node" # Specifies node version to use "node"="latest"
+addons:
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+      - mysql-client
 service: mysql
 cache:
   directories:
@@ -7,5 +14,6 @@ cache:
   yarn: true
 script:
   - npm i -g codecov
+  - npm run migrations
   - npm run coverage
   - codecov
