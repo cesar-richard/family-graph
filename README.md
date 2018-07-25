@@ -8,6 +8,7 @@
 [![codecov-master](https://codecov.io/gh/cesar-richard/family-graph/branch/master/graph/badge.svg)](https://codecov.io/gh/cesar-richard/family-graph)
 [![codecov-develop](https://codecov.io/gh/cesar-richard/family-graph/branch/develop/graph/badge.svg)](https://codecov.io/gh/cesar-richard/family-graph)
 
+
 Structure : 
 ```
 +---.github // Configuration pour github (templates d'issues, etc)
@@ -25,4 +26,3 @@ Structure :
 +---test // Unit tests
 \---views // Views du frontend
 ```
-
