@@ -1,8 +1,8 @@
 const dotenv = require('dotenv').config({ path: `${__dirname}/.env` });
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
-
 const configFile = `./${ENVIRONMENT}`;
+const mysql = require('mysql');
 
 const isObject = variable => {
   return variable instanceof Object;
@@ -27,6 +27,7 @@ const assignObject = (target, source) => {
 
 const config = {
   common: {
+    debug: true,
     port: 3651,
     database: {
       host: process.env.sqlhost,
@@ -42,10 +43,24 @@ const config = {
     },
     cas: {
       cas_url: 'https://cas.utc.fr/cas',
-      service_url: 'http://node.crichard.fr',
+      service_url: process.env.url || 'http://node.crichard.fr/',
       cas_version: '2.0',
-      session_info: 'cas_infos'
+      session_info: 'cas_infos',
+      is_dev_mode: process.env.NODE_ENV === 'testing',
+      dev_mode_user: 'testUser',
+      dev_mode_info: ''
     }
+  },
+  init() {
+    const pool = mysql.createPool({
+      connectionLimit: 50,
+      host: this.common.database.host,
+      user: this.common.database.username,
+      password: this.common.database.password,
+      database: this.common.database.database,
+      insecureAuth: this.common.database.insecureAuth
+    });
+    global.pool = pool;
   }
 };
 
