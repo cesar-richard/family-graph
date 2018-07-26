@@ -1,4 +1,4 @@
-const config = require('./class/config');
+const config = require('./config');
 
 config.init();
 const express = require('express');
@@ -9,8 +9,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const CASAuthentication = require('cas-authentication');
+const orm = require('./app/orm');
 
-const cas = new CASAuthentication(config.cas);
+const cas = new CASAuthentication(config.common.cas);
 
 global.cas = cas;
 
@@ -18,8 +19,9 @@ const routes = require('./routes/index');
 
 const app = express();
 
-app.set('views', path.join(__dirname, 'views'));
+
 app.set('view engine', 'twig');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -27,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: 'cEstLeMarketPutainMaggle!',
+    secret: 'seeWhatYouDidThere?!',
     resave: false,
     saveUninitialized: true
   })
