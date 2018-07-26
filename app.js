@@ -22,7 +22,7 @@ const app = express();
 app.locals.title = config.common.locals.appTitle;
 
 app.set('view engine', 'twig');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
