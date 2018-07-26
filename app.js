@@ -39,6 +39,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 
+orm.init(app);
+
 console.log('Routes initialized'); // eslint-disable-line no-console
 
 app.use(function(req, res, next) {

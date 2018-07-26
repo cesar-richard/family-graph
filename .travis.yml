@@ -6,21 +6,22 @@ env:
   MYSQL_ROOT_PASSWORD: 
   sqlhost: localhost
   sqluser: travis
-addons:
-  apt:
-    sources:
-      - mysql-5.7-trusty
-    packages:
-      - mysql-server
-      - mysql-client
-service: mysql
+#addons:
+#  apt:
+#    sources:
+#      - mysql-5.7-trusty
+#    packages:
+#      - mysql-server
+#      - mysql-client
+service:
+  - mysql
 cache:
   directories:
     - "node_modules"
-
+before_install:
+  - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
 before_script:
   - cp ./migrations/config.js.travis ./migrations/config.js
-  - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
 script:
   - npm i -g codecov
   - npm run migrations
