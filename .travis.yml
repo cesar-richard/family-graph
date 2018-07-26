@@ -17,11 +17,9 @@ service: mysql
 cache:
   directories:
     - "node_modules"
-  yarn: true
 
 before_script:
   - cp ./migrations/config.js.travis ./migrations/config.js
-  - cp ./config/.env.travis ./config/.env
   - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
 script:
   - npm i -g codecov
