@@ -19,6 +19,7 @@ const routes = require('./routes/index');
 
 const app = express();
 
+app.locals.title = config.common.locals.appTitle;
 
 app.set('view engine', 'twig');
 app.set('views', path.join(__dirname, 'views'));

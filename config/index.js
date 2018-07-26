@@ -29,6 +29,9 @@ const config = {
   common: {
     debug: true,
     port: 3651,
+    locals: {
+      appTitle: "Graph'Ut"
+    },
     database: {
       host: process.env.sqlhost,
       port: process.env.NODE_API_DB_PORT,
@@ -43,12 +46,9 @@ const config = {
     },
     cas: {
       cas_url: 'https://cas.utc.fr/cas',
-      service_url: process.env.url || 'http://node.crichard.fr/',
+      service_url: 'http://node.crichard.fr/',
       cas_version: '2.0',
-      session_info: 'cas_infos',
-      is_dev_mode: process.env.NODE_ENV === 'testing',
-      dev_mode_user: 'testUser',
-      dev_mode_info: ''
+      session_info: 'cas_infos'
     }
   },
   init() {
