@@ -2,7 +2,7 @@ plugins:
   eslint:
     enabled: true
   csslint:
-    enabled: true
+    enabled: false
   git-legal:
     enabled: true
   nodesecurity:
@@ -15,3 +15,12 @@ plugins:
     enabled: true
   shellcheck:
     enabled: true
+
+exclude_patterns:
+- "config/"
+- "**/node_modules/"
+- "**/models/"
+- "**/tests/"
+- ".github/"
+- "migrations/migrations/"
+- "public/css/**"
