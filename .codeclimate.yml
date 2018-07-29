@@ -2,7 +2,7 @@ plugins:
   eslint:
     enabled: true
   csslint:
-    enabled: true
+    enabled: false
   git-legal:
     enabled: true
   nodesecurity:
