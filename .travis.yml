@@ -6,24 +6,21 @@ env:
   MYSQL_ROOT_PASSWORD: 
   sqlhost: localhost
   sqluser: travis
-addons:
-  apt:
-    sources:
-      - mysql-5.7-trusty
-    packages:
-      - mysql-server
-      - mysql-client
-service: mysql
+service:
+  - mysql
 cache:
   directories:
     - "node_modules"
-  yarn: true
-
+before_install:
+  - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
 before_script:
   - cp ./migrations/config.js.travis ./migrations/config.js
-  - cp ./config/.env.travis ./config/.env
-  - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - npm i -g codecov
   - npm run migrations
   - npm run coverage
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
