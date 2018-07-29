@@ -1,0 +1,17 @@
+plugins: 
+  eslint:
+    enabled: true
+  csslint:
+    enabled: true
+  git-legal:
+    enabled: true
+  nodesecurity:
+    enabled: true
+  fixme:
+    enabled: true
+#    exclude_patterns:
+#      - config/engines.yml
+  markdownlint:
+    enabled: true
+  shellcheck:
+    enabled: true
