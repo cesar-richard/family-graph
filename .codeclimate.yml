@@ -10,8 +10,6 @@ plugins:
     enabled: true
   fixme:
     enabled: true
-#    exclude_patterns:
-#      - config/engines.yml
   markdownlint:
     enabled: true
   shellcheck:
