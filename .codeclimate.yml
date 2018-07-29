@@ -1,3 +1,4 @@
+version: "2"
 plugins: 
   eslint:
     enabled: true
@@ -20,7 +21,7 @@ exclude_patterns:
 - "config/"
 - "**/node_modules/"
 - "**/models/"
-- "**/tests/"
+- "**/test/"
 - ".github/"
-- "migrations/migrations/"
+- "migrations/**"
 - "public/css/**"
