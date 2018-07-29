@@ -1,3 +1,4 @@
+version: "2"
 plugins: 
   eslint:
     enabled: true
@@ -9,8 +10,6 @@ plugins:
     enabled: true
   fixme:
     enabled: true
-#    exclude_patterns:
-#      - config/engines.yml
   markdownlint:
     enabled: true
   shellcheck:
