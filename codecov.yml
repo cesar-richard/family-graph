@@ -20,7 +20,10 @@ parsers:
       method: no
       macro: no
   javascript:
-    enable_partials: yes    
+    enable_partials: yes
+
+ignore:
+  - "app/models"
 
 comment:
   layout: "header, diff"

@@ -5,9 +5,9 @@
  */
 
 const app = require('../app');
-const debug = require('debug')('parserFb:server');
+const debug = require('debug')('family-graph:server');
 const http = require('http');
-const config = require('../class/config');
+const config = require('../config');
 
 /**
  * Get port from environment and store in Express.
