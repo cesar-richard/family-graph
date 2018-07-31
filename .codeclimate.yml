@@ -2,8 +2,6 @@ version: "2"
 plugins: 
   eslint:
     enabled: true
-  csslint:
-    enabled: false
   git-legal:
     enabled: true
   nodesecurity:
@@ -11,10 +9,7 @@ plugins:
   fixme:
     enabled: true
   markdownlint:
-    enabled: true
-  shellcheck:
-    enabled: true
-
+    enabled: false
 exclude_patterns:
 - "config/"
 - "**/node_modules/"
