@@ -23,9 +23,9 @@
 		height: 700px;
 		border: 1px solid lightgray;
 	}
-	</style>
+</style>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 	function deleteHandler(){
 		$( ".delete" ).click(function(event) {
 			event.preventDefault();
@@ -123,6 +123,16 @@
 				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 			});
 		});
+		$("#graphFindBtn").click(function(event) {
+			event.preventDefault();
+			var txt = $("#graphSearchInput").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+			if(txt=="")
+				return;
+			$.post( '/getNodeId',{ who: txt, shouldcreate: false}, function (data){
+				if(data.id!==null)
+					network.selectNodes([data.id]);network.fit({nodes:[data.id]});
+			});
+		});
 		startNetwork();
 		socket.on('node add', function(msg){
 			console.log("NODE ADD ",msg);
@@ -133,96 +143,107 @@
 			edges.add(msg);
 		});
 	});	
-	</script>
+</script>
 </head>
 <body>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12 text-center">
-						<h1 class="display-4">
-							Genealog'Utc
-						</h2>
-						<p class="lead">
-							Entrez les noms de vos parrains/marraines/fillots/fillottes, officiels/adoptés/disparus/chelous afin de contruire un joli graph !
-						</p>
-				</div>
+				<h1 class="display-4">
+					Genealog'Utc
+				</h2>
+				<p class="lead">
+					Entrez les noms de vos parrains/marraines/fillots/fillottes, officiels/adoptés/disparus/chelous afin de contruire un joli graph !
+				</p>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6">
-				<form class="form-horizontal" role="form">
-					<div class="form-group">
-						<label for="from" class="col-sm-2 control-label">
-							Nom du parrain/marraine
-						</label>
-						<div class="col-sm-10">
-							<input class="form-control namecomplete" id="from" name="from" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="to" class="col-sm-2 control-label">
-							Nom du fillot(te)
-						</label>
-						<div class="col-sm-10">
-							<input class="form-control namecomplete" id="to" name="to" />
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<button class="btn btn-success" id="add" >
-								Ajouter
-							</button>
-						</div>
-					</div>
-				</form>
-				<div>
-					<form>
-						<div class="form-group">
-							<label for="exampleFormControlInput1">Recherche</label>
-							<input class="form-control namecomplete" id="searchInput"/>
-						</div>
-					</form>
-				</div>
-				<table class="table" id="table">
-					<thead>
-						<tr>
-							<th>
-								Parrain/Marraine
-							</th>
-							<th>
-								Fillot(te)
-							</th>
-							<th>
-								Supprimer
-							</th>
-							{% if user == "cerichar" %}<th>
-								Createur
-							</th>{% endif %}
-						</tr>
-					</thead>
-					<tbody>
-						{% for link in links %}
-						<tr id="tr{{link.id}}">
-							<td>{{link.from}}</td>
-							<td>{{link.to}}</td>
-							<td>{% if user == link.creator or user == "cerichar" %}
-								<button class="btn btn-danger delete" id="add" linkid="{{link.id}}" >
-									X
-								</button>
-								{% endif %}
-							</td>
-							{% if user == "cerichar" %}<td>{{link.creator}}</td>{% endif %}
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-			<h2>Graph <a class="btn btn-primary" href="/view">(cliquez ici pour le voir en grand)</a></h2>
-			<div>Utilisez la molette pour zoomer</div>
-			<div class="col-md-6" id="mynetwork">
-			</div>
-			{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button>{% endif %}
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label for="from" class="col-sm-2 control-label">
+						Nom du parrain/marraine
+					</label>
+					<div class="col-sm-10">
+						<input class="form-control namecomplete" id="from" name="from" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="to" class="col-sm-2 control-label">
+						Nom du fillot(te)
+					</label>
+					<div class="col-sm-10">
+						<input class="form-control namecomplete" id="to" name="to" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button class="btn btn-success" id="add" >
+							Ajouter
+						</button>
+					</div>
+				</div>
+			</form>
+			<div>
+				<form>
+					<div class="form-group">
+						<label for="searchInput">Recherche</label>
+						<input class="form-control namecomplete" id="searchInput"/>
+					</div>
+				</form>
+			</div>
+			<table class="table" id="table">
+				<thead>
+					<tr>
+						<th>
+							Parrain/Marraine
+						</th>
+						<th>
+							Fillot(te)
+						</th>
+						<th>
+							Supprimer
+						</th>
+						{% if user == "cerichar" %}<th>
+							Createur
+						</th>{% endif %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for link in links %}
+					<tr id="tr{{link.id}}">
+						<td>{{link.from}}</td>
+						<td>{{link.to}}</td>
+						<td>{% if user == link.creator or user == "cerichar" %}
+							<button class="btn btn-danger delete" id="add" linkid="{{link.id}}" >
+								X
+							</button>
+							{% endif %}
+						</td>
+						{% if user == "cerichar" %}<td>{{link.creator}}</td>{% endif %}
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<h2>Graph <a class="btn btn-primary" href="/view">(cliquez ici pour le voir en grand)</a></h2>
+		<div>Utilisez la molette pour zoomer</div>
+		<div class="col-md-6">
+			<form>
+				<div class="form-group">
+					<label for="graphSearchInput">Recherche</label>
+					<input class="form-control namecomplete" id="graphSearchInput"/>
+					<button class="btn btn-primary" id="graphFindBtn" >
+						Rechercher
+					</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-md-6" id="mynetwork">
+		</div>
+		{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button>{% endif %}
+	</div>
+</div>
 </body>
 </html>

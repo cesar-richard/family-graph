@@ -28,6 +28,7 @@ router.get('/delete', cas.block, function(req, res, next) {
   });
 });
 
+///TODO : Add unit tests for 404 and "shouldcreate" param
 router.post('/getNodeId', cas.block, function(req, res, next) {
   global.pool.getConnection(function(err, connection) {
     connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err2, rows) {
@@ -35,6 +36,7 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
       if (rows.length > 0) {
         res.send({ status: 'success', method: 'find', id: rows[0].id });
       } else {
+        if(req.body.shouldcreate){
         global.pool.getConnection(function(err3, connection2) {
           connection2.query('INSERT INTO `nodes` (`label`) VALUES (?);', [req.body.who], function(
             err4,
@@ -50,6 +52,9 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
             res.send({ status: 'success', method: 'create', id: rows2.insertId });
           });
         });
+        }else{
+          req.status(404).send({ status: 'fail', message: 'node not found'})
+        }
       }
     });
   });
