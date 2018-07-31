@@ -95,6 +95,24 @@ describe('API', () => {
           done(new Error(err));
         });
     });
+
+    it('should not find any node and return 404', done => {
+      chai
+        .request(server)
+        .post('/getNodeId')
+        .send({ who: 'NOTHINGATALL', shouldcreate: false })
+        .then(res => {
+          res.should.have.status(404);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('fail');
+          res.body.should.have.property('message').that.equals('node not found');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+    });
   });
 
   describe('/getnodes', () => {

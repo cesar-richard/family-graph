@@ -30,6 +30,7 @@ router.get('/delete', cas.block, function(req, res, next) {
 
 ///TODO : Add unit tests for 404 and "shouldcreate" param
 router.post('/getNodeId', cas.block, function(req, res, next) {
+  req.body.shouldcreate=req.body.shouldcreate===true?true:false;
   global.pool.getConnection(function(err, connection) {
     connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err2, rows) {
       connection.release();
