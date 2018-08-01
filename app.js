@@ -70,10 +70,7 @@ const init = () => {
     })
     .then(() => orm.init(app))
     .then(() => {
-      routes.init(app);
       app.use(errors.handle);
-      app.listen(port);
-
       logger.info(`Listening on port: ${port}`);
     })
     .catch(logger.error);
