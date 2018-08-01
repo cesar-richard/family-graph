@@ -24,6 +24,8 @@ parsers:
 
 ignore:
   - "app/models"
+  - "/migrations/index.js"
+  - "app/middlewares/errors.js"
 
 comment:
   layout: "header, diff"

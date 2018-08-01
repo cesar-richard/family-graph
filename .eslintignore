@@ -1,5 +1,6 @@
 app/dist
+app/logger/logs
 node_modules
-app/views/public/libs
+public/js
 coverage
 docs
