@@ -4,12 +4,14 @@ config.init();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const CASAuthentication = require('cas-authentication');
 const orm = require('./app/orm');
+const errors = require('./app/middlewares/errors');
+const migrationsManager = require('./migrations');
+const logger = require('./app/logger');
 
 const cas = new CASAuthentication(config.common.cas);
 
@@ -17,45 +19,63 @@ global.cas = cas;
 
 const routes = require('./app/routes/index');
 
-const app = express();
+const init = () => {
+  const app = express();
+  const port = config.common.port || 8080;
+  module.exports = app;
 
-app.locals.title = config.common.locals.appTitle;
+  app.locals.title = config.common.locals.appTitle;
 
-app.set('view engine', 'twig');
-app.set('views', path.join(__dirname, 'app/views'));
+  app.set('view engine', 'twig');
+  app.set('views', path.join(__dirname, 'app/views'));
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(
-  session({
-    secret: 'seeWhatYouDidThere?!',
-    resave: false,
-    saveUninitialized: true
-  })
-);
-app.use(express.static(path.join(__dirname, 'public')));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(cookieParser());
+  app.use(
+    session({
+      secret: 'seeWhatYouDidThere?!',
+      resave: false,
+      saveUninitialized: true
+    })
+  );
+  app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+  app.use('/', routes);
 
-orm.init(app);
+  orm.init(app);
 
-console.log('Routes initialized'); // eslint-disable-line no-console
+  console.log('Routes initialized'); // eslint-disable-line no-console
 
-app.use(function(req, res, next) {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-app.use(function(err, req, res, next) {
-  res.status(err.status);
-  res.render('error.html.twig', {
-    message: err.message,
-    error: err
+  app.use(function(req, res, next) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
   });
-});
-console.log('Error handler initialized'); // eslint-disable-line no-console
 
-module.exports = app;
+  app.use(function(err, req, res, next) {
+    res.status(err.status);
+    res.render('error.html.twig', {
+      message: err.message,
+      error: err
+    });
+  });
+  console.log('Error handler initialized'); // eslint-disable-line no-console
+
+  Promise.resolve()
+    .then(() => {
+      if (!config.isTesting) {
+        // return migrationsManager.check();
+      }
+    })
+    .then(() => orm.init(app))
+    .then(() => {
+      routes.init(app);
+      app.use(errors.handle);
+      app.listen(port);
+
+      logger.info(`Listening on port: ${port}`);
+    })
+    .catch(logger.error);
+};
+init();

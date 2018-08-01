@@ -28,33 +28,32 @@ router.get('/delete', cas.block, function(req, res, next) {
   });
 });
 
-///TODO : Add unit tests for 404 and "shouldcreate" param
 router.post('/getNodeId', cas.block, function(req, res, next) {
-  req.body.shouldcreate=req.body.shouldcreate===true?true:false;
+  req.body.shouldcreate =
+    typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
   global.pool.getConnection(function(err, connection) {
     connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err2, rows) {
       connection.release();
       if (rows.length > 0) {
         res.send({ status: 'success', method: 'find', id: rows[0].id });
       } else {
-        if(req.body.shouldcreate){
-        global.pool.getConnection(function(err3, connection2) {
-          connection2.query('INSERT INTO `nodes` (`label`) VALUES (?);', [req.body.who], function(
-            err4,
-            rows2
-          ) {
-            connection2.release();
-            global.io.emit('node add', {
-              id: rows2.insertId,
-              label: req.body.who,
-              color: { background: '#F03967', border: '#713E7F' }
+        if (req.body.shouldcreate) {
+          global.pool.getConnection(function(err3, connection2) {
+            connection2.query('INSERT INTO `nodes` (`label`) VALUES (?);', [req.body.who], function(
+              err4,
+              rows2
+            ) {
+              connection2.release();
+              global.io.emit('node add', {
+                id: rows2.insertId,
+                label: req.body.who,
+                color: { background: '#F03967', border: '#713E7F' }
+              });
+              res.status(201).send({ status: 'success', method: 'create', id: rows2.insertId });
             });
-            res.status(201);
-            res.send({ status: 'success', method: 'create', id: rows2.insertId });
           });
-        });
-        }else{
-          req.status(404).send({ status: 'fail', message: 'node not found'})
+        } else {
+          res.status(404).send({ status: 'fail', message: 'node not found' });
         }
       }
     });
