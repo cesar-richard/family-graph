@@ -7,7 +7,7 @@ const visits = require('../middlewares/visits');
 
 const cas = global.cas;
 
-const orm = require('./../orm');
+const orm = require('../orm');
 
 router.get('/delete', cas.block, visits.delete, function(req, res, next) {
   global.pool.getConnection(function(err, connection) {

@@ -1,7 +1,7 @@
 // const errors = require('../errors');
 const logger = require('../logger'),
-  cas = global.cas,
-  orm = require('../orm');
+  orm = require('../orm'),
+  cas = global.cas;
 
 function visit(route, req, res, next) {
   logger.info(`${route} for ${req.session[cas.session_name]}`);
