@@ -6,6 +6,8 @@ exports.getModel = db => {
     x: Sequelize.FLOAT,
     y: Sequelize.FLOAT
   });
-  nodes.associate = function(models) {};
+  nodes.associate = function(models) {
+  	nodes.hasMany(models.edges);
+  };
   return nodes;
 };

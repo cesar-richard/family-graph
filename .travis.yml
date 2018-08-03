@@ -4,6 +4,7 @@ env:
   NODE_ENV: "testing"
   MYSQL_DATABASE: testbase
   MYSQL_ROOT_PASSWORD: 
+  NODE_API_DB_PORT: 3306
   sqlhost: localhost
   sqluser: travis
 service:

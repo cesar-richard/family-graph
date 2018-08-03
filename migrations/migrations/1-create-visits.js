@@ -12,9 +12,6 @@ module.exports = {
       username: {
         type: Sequelize.STRING
       },
-      when: {
-        type: Sequelize.DATE
-      },
       route: {
         type: Sequelize.STRING
       },
@@ -22,9 +19,6 @@ module.exports = {
         type: Sequelize.DATE
       },
       updatedAt: {
-        type: Sequelize.DATE
-      },
-      UPDATED_AT: {
         type: Sequelize.DATE
       }
     });
