@@ -25,9 +25,9 @@
 		height: 700px;
 		border: 1px solid lightgray;
 	}
-</style>
+	</style>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 	var network,nodes,edges;
 	function objectToArray(obj) {
 		return Object.keys(obj).map(function (key) {
@@ -144,7 +144,7 @@
 			edges.add(msg);
 		});
 	});	
-</script>
+	</script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -210,8 +210,8 @@
 					{% for link in links %}
 					<tr id="tr{{link.id}}">
 						<td>{{link.id}}</td>
-						<td>{{link.from}}</td>
-						<td>{{link.to}}</td>
+						<td>{{link.parent.label}}</td>
+						<td>{{link.child.label}}</td>
 						<td>{% if user == link.creator or user == "cerichar" %}
 							<button class="btn btn-danger delete" id="add" linkid="{{link.id}}" >
 								X

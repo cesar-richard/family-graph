@@ -27,7 +27,7 @@ router.get('/delete', cas.block, visits.delete, function(req, res, next) {
 
 router.post('/getNodeId', cas.block, function(req, res, next) {
   req.body.shouldcreate =
-  typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
+    typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
   global.pool.getConnection(function(err, connection) {
     connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err2, rows) {
       connection.release();
@@ -39,7 +39,7 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
             connection2.query('INSERT INTO `nodes` (`label`) VALUES (?);', [req.body.who], function(
               err4,
               rows2
-              ) {
+            ) {
               connection2.release();
               global.io.emit('node add', {
                 id: rows2.insertId,
@@ -58,38 +58,47 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
 });
 
 router.get('/', cas.bounce, visits.home, function(req, res, next) {
-  //include: [ { all: true } ]
-  global.pool.getConnection(function(err, connection) {
-    connection.query(
-      'SELECT `edges`.`id`,`n1`.`label` as `from`,`n2`.`label` as `to`,`edges`.`creator`,`edges`.`updatedAt` FROM `edges`,`nodes` as `n1`, `nodes` as `n2` WHERE `edges`.`from` = `n1`.`id` AND `edges`.`to` = `n2`.`id` ORDER BY `from`, `to`;',
-      function(err3, rows2) {
-        connection.release();
-        res.render('form.html.twig', { links: rows2, user: req.session[cas.session_name] });
-      });
-  });
+  orm.models.edges
+    .findAll({ include: [{ all: true }] })
+    .then(edges => {
+      res.render('form.html.twig', { links: edges, user: req.session[cas.session_name] });
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
+    });
 });
 
 router.get('/getnodes', function(req, res, next) {
-  orm.models.nodes.findAll({where: {label: {[Op.iLike]: `%${req.query.term}%`}}}).then((nodes)=>{
-    res.send(nodes);
-  });
+  orm.models.nodes
+    .findAll({ where: { label: { [orm.Op.like]: `%${req.query.term}%` } } })
+    .then(nodes => {
+      res.send(nodes);
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
+    });
 });
 
 router.post('/add', cas.block, function(req, res, next) {
-  orm.models.edges.create({from: req.body.from, to: req.body.to, creator: req.session[cas.session_name]})
-  .then(edge=>{
-    console.log(edge);
-    global.io.emit('edge add', {
-      id: edge.id,
+  orm.models.edges
+    .create({
       from: req.body.from,
       to: req.body.to,
-      arrows: 'to',
-      color: { color: 'green' }
+      creator: req.session[cas.session_name]
+    })
+    .then(edge => {
+      global.io.emit('edge add', {
+        id: edge.id,
+        from: req.body.from,
+        to: req.body.to,
+        arrows: 'to',
+        color: { color: 'green' }
+      });
+      res.send({ status: 'success', id: edge.id, from: req.body.from, to: req.body.to });
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
     });
-    res.send({ status: 'success', id: rows.insertId, from: req.body.from, to: req.body.to });
-  }).catch(err=>{
-    res.status(500).send({status: 'fail', error: err});
-  });
 });
 
 router.get('/view', cas.bounce, visits.view, function(req, res, next) {
@@ -97,38 +106,52 @@ router.get('/view', cas.bounce, visits.view, function(req, res, next) {
 });
 
 router.get('/nodes', cas.block, function(req, res, next) {
-  orm.models.nodes.findAll().then((nodes)=>{
-    res.send(nodes);
-  });
+  orm.models.nodes
+    .findAll()
+    .then(nodes => {
+      res.send(nodes);
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
+    });
 });
 
 router.get('/edges', cas.block, function(req, res, next) {
-  orm.models.edges.findAll().then((edges)=>{
-    edges.forEach(function(edge, index) {
-      edges[index].dashes = edge.dashes !== 0;
+  orm.models.edges
+    .findAll()
+    .then(edges => {
+      edges.forEach(function(edge, index) {
+        edges[index].dashes = edge.dashes !== 0;
+      });
+      res.send(edges);
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
     });
-    res.send(edges);
-  });
 });
 
 router.post('/udpateNodePos', cas.block, visits.updatePos, function(req, res, next) {
-  orm.models.node.update({
-    x: req.body.x,
-    y: req.body.y
-  },
-  {
-    where: {
-      id: {
-        [Op.eq]: req.body.id
+  orm.models.node
+    .update(
+      {
+        x: req.body.x,
+        y: req.body.y
+      },
+      {
+        where: {
+          id: {
+            [orm.Op.eq]: req.body.id
+          }
+        }
       }
-    }
-  }).then(()=>{
-    res.send({ status: 'success', id: req.body.id })
-  })
-  .catch((err)=>{
-    res.status(404);
-    res.send({ status: 'fail', error: err });
-  });
+    )
+    .then(() => {
+      res.send({ status: 'success', id: req.body.id });
+    })
+    .catch(err => {
+      res.status(404);
+      res.send({ status: 'fail', error: err });
+    });
 });
 
 module.exports = router;

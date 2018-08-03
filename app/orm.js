@@ -17,3 +17,5 @@ exports.init = () => {
   exports.models = db.models;
   return config.isTesting ? Promise.resolve() : db.sync();
 };
+
+exports.Op = Sequelize.Op;
