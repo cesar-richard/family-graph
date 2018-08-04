@@ -131,7 +131,7 @@ router.get('/edges', cas.block, function(req, res, next) {
 });
 
 router.post('/udpateNodePos', cas.block, visits.updatePos, function(req, res, next) {
-  orm.models.node
+  orm.models.nodes
     .update(
       {
         x: req.body.x,
@@ -139,18 +139,16 @@ router.post('/udpateNodePos', cas.block, visits.updatePos, function(req, res, ne
       },
       {
         where: {
-          id: {
-            [orm.Op.eq]: req.body.id
-          }
+          id: req.body.id
         }
       }
     )
-    .then(() => {
-      res.send({ status: 'success', id: req.body.id });
+    .then(result => {
+      if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
+      else res.send({ status: 'success', id: req.body.id });
     })
     .catch(err => {
-      res.status(404);
-      res.send({ status: 'fail', error: err });
+      res.status(500).send({ status: 'fail', error: err });
     });
 });
 
