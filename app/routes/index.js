@@ -10,51 +10,56 @@ const cas = global.cas;
 const orm = require('../orm');
 
 router.get('/delete', cas.block, visits.delete, function(req, res, next) {
-  global.pool.getConnection(function(err, connection) {
-    connection.query('SELECT * FROM `edges` WHERE `id` = ?;', [req.query.id], function(err3, rows2) {
-      if (rows2.length > 0 && rows2[0].creator === req.session[cas.session_name]) {
-        connection.query('DELETE FROM `edges` WHERE `id` = ?;', [req.query.id], function(err4, rows3) {
-          connection.release();
-          res.send({ status: 'success' });
-        });
-      } else {
-        connection.release();
-        res.status(404).send({ status: 'fail', message: 'not found' });
+  let condition = { where: { id: req.query.id, creator: req.session[cas.session_name] } };
+  if (req.session[cas.session_name] === 'cerichar') condition = { where: { id: req.query.id } };
+  orm.models.edges
+    .findOne(condition)
+    .then(edge => {
+      if (edge === null) res.status(404).send({ status: 'fail', message: 'not found' });
+      else {
+        edge.destroy();
+        res.send({ status: 'success' });
       }
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
     });
-  });
 });
 
 router.post('/getNodeId', cas.block, function(req, res, next) {
   req.body.shouldcreate =
     typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
-  global.pool.getConnection(function(err, connection) {
-    connection.query('SELECT * FROM `nodes` WHERE `label` like ?;', [req.body.who], function(err2, rows) {
-      connection.release();
-      if (rows.length > 0) {
-        res.send({ status: 'success', method: 'find', id: rows[0].id });
+  orm.models.nodes
+    .findAll({ where: { label: { [orm.Op.like]: `%${req.query.term}%` } } })
+    .then(nodes => {
+      if (nodes.length > 0) {
+        res.send({ status: 'success', method: 'find', id: nodes[0].id });
       } else {
         if (req.body.shouldcreate) {
-          global.pool.getConnection(function(err3, connection2) {
-            connection2.query('INSERT INTO `nodes` (`label`) VALUES (?);', [req.body.who], function(
-              err4,
-              rows2
-            ) {
-              connection2.release();
+          orm.models.edges
+            .create({
+              label: req.body.who,
+              creator: req.session[cas.session_name]
+            })
+            .then(node => {
               global.io.emit('node add', {
-                id: rows2.insertId,
+                id: node.id,
                 label: req.body.who,
                 color: { background: '#F03967', border: '#713E7F' }
               });
-              res.status(201).send({ status: 'success', method: 'create', id: rows2.insertId });
+              res.status(201).send({ status: 'success', method: 'create', id: node.id });
+            })
+            .catch(err => {
+              res.status(500).send({ status: 'fail', error: err });
             });
-          });
         } else {
           res.status(404).send({ status: 'fail', message: 'node not found' });
         }
       }
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
     });
-  });
 });
 
 router.get('/', cas.bounce, visits.home, function(req, res, next) {

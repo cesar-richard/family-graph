@@ -29,7 +29,7 @@ const config = {
     debug: true,
     port: 3651,
     locals: {
-      appTitle: "Graph'Ut"
+      appTitle: "Genealog'Utc"
     },
     database: {
       host: process.env.sqlhost,
@@ -49,17 +49,6 @@ const config = {
       cas_version: '2.0',
       session_info: 'cas_infos'
     }
-  },
-  init() {
-    const pool = mysql.createPool({
-      connectionLimit: 50,
-      host: this.common.database.host,
-      user: this.common.database.username,
-      password: this.common.database.password,
-      database: this.common.database.database,
-      insecureAuth: this.common.database.insecureAuth
-    });
-    global.pool = pool;
   }
 };
 
