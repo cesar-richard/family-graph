@@ -89,78 +89,86 @@
 		box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
 	}
 
-	</style>
+</style>
 </head>
 <body>
 	<div id="mynetwork"></div>
 	{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button>{% endif %}
 	<script type="text/javascript">
-	var network,nodes,edges;
-	function objectToArray(obj) {
-		return Object.keys(obj).map(function (key) {
-			obj[key].id = key;
-			return obj[key];
-		});
-	}
-
-	function startNetwork() {
-		var container = document.getElementById('mynetwork');
-		var  options = {
-			nodes: {
-				shape: 'dot',
-				size: 16
-			},
-			physics: {
-				forceAtlas2Based: {
-					gravitationalConstant: -30,
-					centralGravity: 0.004,
-				},
-				solver: 'forceAtlas2Based',
-				timestep: 0.2,
-				stabilization: {
-					enabled:false,
-					iterations:500,
-					updateInterval:25
-				}
-			}
-		};
-		$.get( '/nodes', function(nodelist) {
-			$.get( '/edges', function(edgelist) {
-				nodes = new vis.DataSet(nodelist);
-				edges = new vis.DataSet(edgelist);
-				var data = {
-					nodes: nodes,
-					edges: edges
-				}
-				network = new vis.Network(container, data, options);
-				options.physics.enabled=true;
-				network.setOptions(options);
+		var network,nodes,edges;
+		function objectToArray(obj) {
+			return Object.keys(obj).map(function (key) {
+				obj[key].id = key;
+				return obj[key];
 			});
-		});
-	}
-	$(function(){
-		startNetwork();
-		{% if user == "cerichar" %}
-		$("#save").click(function(event) {
-			event.preventDefault();
-			var nodes = objectToArray(network.body.nodes);
-			nodes.forEach(function(node, index){
-				$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
-					//console.log(node,res);
+		}
+
+		function startNetwork() {
+			var container = document.getElementById('mynetwork');
+			var  options = {
+				nodes: {
+					shape: 'dot',
+					size: 16,
+					borderWidth:4,
+					color: {
+						border: '#406897',
+						background: '#6AAFFF'
+					},
+					shapeProperties: {
+						useBorderWithImage:true
+					}
+				},
+				physics: {
+					forceAtlas2Based: {
+						gravitationalConstant: -30,
+						centralGravity: 0.004,
+					},
+					solver: 'forceAtlas2Based',
+					timestep: 0.2,
+					stabilization: {
+						enabled:false,
+						iterations:500,
+						updateInterval:25
+					}
+				}
+			};
+			$.get( '/nodes', function(nodelist) {
+				$.get( '/edges', function(edgelist) {
+					nodes = new vis.DataSet(nodelist);
+					edges = new vis.DataSet(edgelist);
+					var data = {
+						nodes: nodes,
+						edges: edges
+					}
+					network = new vis.Network(container, data, options);
+					options.physics.enabled=true;
+					network.setOptions(options);
 				});
 			});
+		}
+		$(function(){
+			startNetwork();
+			{% if user == "cerichar" %}
+			$("#save").click(function(event) {
+				event.preventDefault();
+				var nodes = objectToArray(network.body.nodes);
+				nodes.forEach(function(node, index){
+					$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
+					//console.log(node,res);
+				});
+				});
+			});
+			{% endif %}
+			var socket = io();
+			socket.on('node add', function(msg){
+				console.log("NODE ADD ",msg);
+				nodes.add(msg);
+			});
+			socket.on('edge add', function(msg){
+				console.log("EDGE ADD ",msg);
+				edges.add(msg);
+			});
 		});
-		{% endif %}
-		var socket = io();
-		socket.on('node add', function(msg){
-			console.log("NODE ADD ",msg);
-			nodes.add(msg);
-		});
-		socket.on('edge add', function(msg){
-			console.log("EDGE ADD ",msg);
-			edges.add(msg);
-		});
-	});
 	</script>
 </body>
 </html>

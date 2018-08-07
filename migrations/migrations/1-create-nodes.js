@@ -18,6 +18,9 @@ module.exports = {
       y: {
         type: Sequelize.FLOAT
       },
+      image: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         type: Sequelize.DATE
       },

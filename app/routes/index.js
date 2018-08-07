@@ -111,6 +111,9 @@ router.get('/view', cas.bounce, visits.view, function(req, res, next) {
 });
 
 router.get('/nodes', cas.block, function(req, res, next) {
+  //TODO add get test with login
+  //TODO add weez api get for login ? manual by admin
+  //TODO use brokenImage: for fallback images
   orm.models.nodes
     .findAll()
     .then(nodes => {
