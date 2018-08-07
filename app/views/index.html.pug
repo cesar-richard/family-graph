@@ -1,0 +1,198 @@
+doctype html
+html
+	head
+		title Genealog'Utc
+		script(type='text/javascript', src='https://code.jquery.com/jquery-3.1.1.min.js')
+		script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+		link(rel='stylesheet', href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
+		// Latest compiled and minified CSS
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
+		// Optional theme
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css', integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp', crossorigin='anonymous')
+		link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css', integrity='sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=', crossorigin='anonymous')
+		link(rel='stylesheet', href='/css/jquery.bootgrid.min.css')
+		// Latest compiled and minified JavaScript
+		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js', integrity='sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=', crossorigin='anonymous')
+		script(src='/js/jquery.bootgrid.min.js')
+		style(type='text/css').
+			#mynetwork {
+				height: 700px;
+				border: 1px solid lightgray;
+			}
+		script(type='text/javascript').
+			var network,nodes,edges;
+			function objectToArray(obj) {
+				return Object.keys(obj).map(function (key) {
+					obj[key].id = key;
+					return obj[key];
+				});
+			}
+			function startNetwork() {
+			var container = document.getElementById('mynetwork');
+			var  options = {
+				nodes: {
+					shape: 'dot',
+					size: 16
+				},
+				physics: {
+					forceAtlas2Based: {
+						gravitationalConstant: -30,
+						centralGravity: 0.004,
+					},
+					solver: 'forceAtlas2Based',
+					timestep: 0.2,
+					stabilization: {
+						enabled:false,
+						iterations:500,
+						updateInterval:25
+					}
+				}
+			};
+			$.get( '/nodes', function(nodelist) {
+				$.get( '/edges', function(edgelist) {
+					nodes = new vis.DataSet(nodelist);
+					edges = new vis.DataSet(edgelist);
+					var data = {
+						nodes: nodes,
+						edges: edges
+					}
+					network = new vis.Network(container, data, options);
+					options.physics.enabled=true;
+					network.setOptions(options);
+				});
+			});
+			}
+			$(function(){
+				var socket = io();
+				$( ".namecomplete" ).autocomplete({
+					source: "/getnodes",
+					minLength: 3
+				});
+				if user == "cerichar"
+					$("#save").click(function(event) {
+						event.preventDefault();
+						var nodes = objectToArray(network.getPositions());
+						nodes.forEach(function(node, index){
+							$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {});
+						});
+					});
+				$( "#add" ).click(function(event) {
+					event.preventDefault();
+					var fromTxt = $("#from").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
+					var toTxt = $("#to").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
+					if(fromTxt=="" || toTxt=="")
+						return;
+					$.post( '/getNodeId',{ who: fromTxt}, function (data){
+						fromId=data.id;
+						$.post( '/getNodeId',{ who: toTxt}, function (data){
+							toId=data.id;
+							$.post( '/add',{ from: fromId, to: toId }, function(data) {
+								$("#table").bootgrid("append",[{ "id":data.id, "parent":fromTxt, "child":toTxt, "creator":"{{user}}", "status":1 }]);
+								$("#to").val("");
+							});
+						});
+					});
+				});
+				var table = $("#table").bootgrid({
+					formatters: {
+						"commands": function(column, row)
+						{
+							return "<button class=\\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
+						}
+					}
+				}).on("loaded.rs.jquery.bootgrid", function()
+				{
+					table.find(".delete").on("click", function(e)
+					{
+						let id = $(this).data("row-id");
+						$.get( '/delete',{ "id": id }, function(data) {
+							$("#table").bootgrid("remove",[id]);
+						});
+					});
+				});;
+				$("#graphFindBtn").click(function(event) {
+					event.preventDefault();
+					var txt = $("#graphSearchInput").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
+					if(txt=="")
+						return;
+					$.post( '/getNodeId',{ who: txt, shouldcreate: false}, function (data){
+						if(data.id!==null)
+						network.selectNodes([data.id]);network.fit({nodes:[data.id]});
+					});
+				});
+				startNetwork();
+				socket.on('node add', function(msg){
+					console.log("NODE ADD ",msg);
+					nodes.add(msg);
+				});
+				socket.on('edge add', function(msg){
+					console.log("EDGE ADD ",msg);
+					edges.add(msg);
+				});
+			});
+	body
+		.container-fluid
+			.row
+				.col-md-12.text-center
+					h1.display-4
+						| Genealog'Utc
+						p.lead
+							| Entrez les noms de vos parrains/marraines/fillots/fillottes, officiels/adoptés/disparus/chelous afin de contruire un joli graph !
+		.row
+			.col-md-6
+				form.form-horizontal(role='form')
+					.form-group
+						label.col-sm-2.control-label(for='from')
+							| Nom du parrain/marraine
+						.col-sm-10
+							input#from.form-control.namecomplete(name='from')
+					.form-group
+						label.col-sm-2.control-label(for='to')
+							| Nom du fillot(te)
+						.col-sm-10
+							input#to.form-control.namecomplete(name='to')
+					.form-group
+						.col-sm-offset-2.col-sm-10
+							button#add.btn.btn-success
+								| Ajouter
+				table#table.table.table-striped.table-condensed.table-hover
+					thead
+						tr
+							th(data-column-id='id', data-identifier='true', data-type='numeric', data-visible='false')
+								| Id
+							th(data-column-id='parent', data-order='asc')
+								| Parrain/Marraine
+							th(data-column-id='child', data-order='asc')
+								| Fillot(te)
+							th(data-column-id='commands', data-formatter='commands', data-sortable='false')
+								| Supprimer
+							if user == "cerichar"
+								th(data-column-id='creator')
+								| Createur
+					tbody
+						each link in links
+							tr
+								td=link.id
+								td=link.parent.label
+								td=link.child.label
+								td
+									if user == link.creator || user == "cerichar"
+										button#add.btn.btn-danger.delete(linkid=link.id) X
+								if user == "cerichar"
+									td link.creator
+			h2
+				| Graph 
+				a.btn.btn-primary(href='/view') (cliquez ici pour le voir en grand)
+			div Utilisez la molette pour zoomer
+			.col-md-6
+				form
+					.form-group
+						label(for='graphSearchInput') Recherche
+						input#graphSearchInput.form-control.namecomplete
+						button#graphFindBtn.btn.btn-primary
+							| Rechercher
+			#mynetwork.col-md-6
+				if user == "cerichar"
+					button#save.btn.btn-primary Save positions
