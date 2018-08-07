@@ -30,13 +30,13 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
   req.body.shouldcreate =
     typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
   orm.models.nodes
-    .findAll({ where: { label: { [orm.Op.like]: `%${req.query.term}%` } } })
+    .findAll({ where: { label: { [orm.Op.like]: `%${req.body.who}%` } } })
     .then(nodes => {
       if (nodes.length > 0) {
         res.send({ status: 'success', method: 'find', id: nodes[0].id });
       } else {
         if (req.body.shouldcreate) {
-          orm.models.edges
+          orm.models.nodes
             .create({
               label: req.body.who,
               creator: req.session[cas.session_name]

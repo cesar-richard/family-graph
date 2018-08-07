@@ -7,10 +7,6 @@ const isObject = variable => {
   return variable instanceof Object;
 };
 
-/*
- * Deep copy of source object into tarjet object.
- * It does not overwrite properties.
- */
 const assignObject = (target, source) => {
   if (target && isObject(target) && source && isObject(source)) {
     Object.keys(source).forEach(key => {
@@ -25,6 +21,9 @@ const assignObject = (target, source) => {
 };
 
 const config = {
+  logger: {
+    level: 'info'
+  },
   common: {
     debug: true,
     port: 3651,
@@ -45,7 +44,7 @@ const config = {
     },
     cas: {
       cas_url: 'https://cas.utc.fr/cas',
-      service_url: 'http://node.crichard.fr/',
+      service_url: 'http://dev.crichard.fr/',
       cas_version: '2.0',
       session_info: 'cas_infos'
     }

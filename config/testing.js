@@ -2,15 +2,15 @@ exports.config = {
   environment: 'testing',
   isTesting: true,
   logger: {
-    level: 'error'
+    level: 'verbose'
   },
   common: {
     port: 3653,
     database: {
-      database: process.env.MYSQL_DATABASE || 'develop',
-      host: process.env.sqlhost || 'localhost',
-      username: process.env.sqluser || 'parserfb',
-      password: process.env.MYSQL_ROOT_PASSWORD || 'parserfb'
+      database: process.env.MYSQL_DATABASE,
+      host: process.env.sqlhost,
+      username: process.env.sqluser,
+      password: process.env.MYSQL_ROOT_PASSWORD
     },
     cas: {
       is_dev_mode: true,

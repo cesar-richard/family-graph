@@ -1,4 +1,3 @@
-// const errors = require('../errors');
 const logger = require('../logger'),
   orm = require('../orm'),
   cas = global.cas;
@@ -7,8 +6,9 @@ function visit(route, req, res, next) {
   logger.info(`${route} for ${req.session[cas.session_name]}`);
   orm.models.visits
     .create({ username: req.session[cas.session_name], route })
-    .then(() => {
+    .then(visit => {
       next();
+      return null;
     })
     .catch(err => {
       res.status(500).send(err);
