@@ -1,7 +1,7 @@
 /* eslint no-console: 0 */
 const express = require('express');
 const config = require('../../config');
-
+const CASAuthentication = require('cas-authentication');
 const router = express.Router();
 const fs = require('fs');
 const visits = require('../middlewares/visits');

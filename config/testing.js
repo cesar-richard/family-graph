@@ -2,7 +2,7 @@ exports.config = {
   environment: 'testing',
   isTesting: true,
   logger: {
-    level: 'verbose'
+    level: 'error'
   },
   common: {
     port: 3653,

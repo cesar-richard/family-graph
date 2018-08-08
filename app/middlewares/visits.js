@@ -3,17 +3,21 @@ const logger = require('../logger'),
   cas = global.cas;
 
 function visit(route, req, res, next) {
+  next();
+  /*
   logger.info(`${route} for ${req.session[cas.session_name]}`);
+  next();
   orm.models.visits
-    .create({ username: req.session[cas.session_name], route })
-    .then(visit => {
+    .create({ username: req.session[cas.session_name], route: route })
+    .then(() => {
       next();
       return null;
     })
     .catch(err => {
       res.status(500).send(err);
     });
-}
+    */
+};
 
 exports.home = (req, res, next) => {
   visit('home', req, res, next);
