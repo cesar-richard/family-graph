@@ -13,8 +13,6 @@ const logger = require('./app/logger');
 
 const cas = new CASAuthentication(config.common.cas);
 
-global.cas = cas;
-
 const routes = require('./app/routes/index');
 
 const init = () => {

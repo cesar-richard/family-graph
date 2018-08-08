@@ -1,11 +1,12 @@
 /* eslint no-console: 0 */
 const express = require('express');
+const config = require('../../config');
 
 const router = express.Router();
 const fs = require('fs');
 const visits = require('../middlewares/visits');
 
-const cas = global.cas;
+const cas = new CASAuthentication(config.common.cas);
 
 const orm = require('../orm');
 
