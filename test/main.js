@@ -1,7 +1,7 @@
 const chai = require('chai'),
-  dictum = require('dictum.js'),
-  server = require('./../app'),
-  should = chai.should();
+dictum = require('dictum.js'),
+server = require('./../app'),
+should = chai.should();
 
 global.io = { emit(a, b) {} };
 
@@ -9,62 +9,66 @@ describe('HTML', () => {
   describe('/NOTHINGATALL', () => {
     it('should return 404 page', done => {
       chai
-        .request(server)
-        .get('/NOTHINGATALL')
-        .then(res => {
-          res.should.have.status(404);
-          res.should.be.html;
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .get('/NOTHINGATALL')
+      .then(res => {
+        res.should.have.status(404);
+        res.should.be.html;
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 
   describe('/', () => {
     it('should return home page', done => {
       chai
-        .request(server)
-        .get('/')
-        .then(res => {
-          res.should.have.status(200);
-          res.should.be.html;
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .get('/')
+      .then(res => {
+        res.should.have.status(200);
+        res.should.be.html;
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 
   describe('/view', () => {
     it('should return graph page', done => {
       chai
-        .request(server)
-        .get('/view')
-        .then(res => {
-          res.should.have.status(200);
-          res.should.be.html;
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .get('/view')
+      .then(res => {
+        res.should.have.status(200);
+        res.should.be.html;
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 });
 
 describe('API', () => {
   describe('/getNodeId', () => {
-    it('should create node and return 201', done => {
-      chai
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      it('should create node and return 201', done => {
+        chai
         .request(server)
         .post('/getNodeId')
-        .send({ who: 'B' })
+        .send({ who: text })
         .then(res => {
           res.should.have.status(201);
           res.should.be.json;
@@ -76,30 +80,35 @@ describe('API', () => {
         .catch(err => {
           done(new Error(err));
         });
-    });
+      });
 
     it('should not find any node and return 404', done => {
       chai
-        .request(server)
-        .post('/getNodeId')
-        .send({ who: 'NOTHINGATALL', shouldcreate: false })
-        .then(res => {
-          res.should.have.status(404);
-          res.should.be.json;
-          res.body.should.have.property('status').that.equals('fail');
-          res.body.should.have.property('message').that.equals('node not found');
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .post('/getNodeId')
+      .send({ who: 'NOTHINGATALL', shouldcreate: false })
+      .then(res => {
+        res.should.have.status(404);
+        res.should.be.json;
+        res.body.should.have.property('status').that.equals('fail');
+        res.body.should.have.property('message').that.equals('node not found');
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 
   describe('/getnodes', () => {
     it('should return node array containing node', done => {
       chai
+      .request(server)
+      .post('/getNodeId')
+      .send({ who: 'B' })
+      .then(node => {
+        chai
         .request(server)
         .get('/getnodes')
         .query({ term: 'B' })
@@ -114,63 +123,64 @@ describe('API', () => {
         .catch(err => {
           done(new Error(err));
         });
+      });
     });
   });
 
   describe('/add', () => {
     it('should find node and return 200', done => {
       chai
-        .request(server)
-        .post('/add')
-        .send({ from: 1, to: 1 })
-        .then(res => {
-          res.should.have.status(200);
-          res.should.be.json;
-          res.body.should.have.property('status').that.equals('success');
-          res.body.should.have.property('id');
-          res.body.should.have.property('from');
-          res.body.should.have.property('to');
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .post('/add')
+      .send({ from: 1, to: 1 })
+      .then(res => {
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.have.property('status').that.equals('success');
+        res.body.should.have.property('id');
+        res.body.should.have.property('from');
+        res.body.should.have.property('to');
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 
   describe('/nodes', () => {
     it('should return nodes list', done => {
       chai
-        .request(server)
-        .get('/nodes')
-        .then(res => {
-          res.should.have.status(200);
-          res.should.be.json;
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .get('/nodes')
+      .then(res => {
+        res.should.have.status(200);
+        res.should.be.json;
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 
   describe('/edges', () => {
     it('should return edges list', done => {
       chai
-        .request(server)
-        .get('/edges')
-        .query({ id: 1 })
-        .then(res => {
-          res.should.have.status(200);
-          res.should.be.json;
-          dictum.chai(res);
-        })
-        .then(() => done())
-        .catch(err => {
-          done(new Error(err));
-        });
+      .request(server)
+      .get('/edges')
+      .query({ id: 1 })
+      .then(res => {
+        res.should.have.status(200);
+        res.should.be.json;
+        dictum.chai(res);
+      })
+      .then(() => done())
+      .catch(err => {
+        done(new Error(err));
+      });
     });
   });
 });
@@ -193,18 +203,44 @@ describe('Admin', () => {
       done(new Error(err));
     });
   });
-  
-  describe('/udpateNodePos', () => {
+
+  describe('/updateNodePos', () => {
     it('should update node position and return 200', done => {
       chai
       .request(server)
-      .post('/udpateNodePos')
-      .send({ x: 5, y: -5, id: 1 })
+      .post('/getNodeId')
+      .send({ who: 'C' })
+      .then(node => {
+        chai
+        .request(server)
+        .post('/updateNodePos')
+        .send({ x: 5, y: -5, id: node.body.id })
+        .then(res => {
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('success');
+          res.body.should.have.property('id');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+      })
+      .catch(errNode => {
+        done(new Error(errNode));
+      });
+    });
+
+    it('should return 404', done => {
+      chai
+      .request(server)
+      .post('/updateNodePos')
+      .send({ x: 5, y: -5, id: 1001 })
       .then(res => {
-        res.should.have.status(200);
+        res.should.have.status(404);
         res.should.be.json;
-        res.body.should.have.property('status').that.equals('success');
-        res.body.should.have.property('id');
+        res.body.should.have.property('status').that.equals('fail');
         dictum.chai(res);
       })
       .then(() => done())
@@ -212,11 +248,40 @@ describe('Admin', () => {
         done(new Error(err));
       });
     });
+  });
+
+    describe('/updateLogin', () => {
+    it('should update node image and return 200', done => {
+      chai
+      .request(server)
+      .post('/getNodeId')
+      .send({ who: 'C' })
+      .then(node => {
+        chai
+        .request(server)
+        .get('/updateLogin')
+        .query({ login: 'fakelogin', id: node.body.id })
+        .then(res => {
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('success');
+          res.body.should.have.property('id');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+      })
+      .catch(errNode => {
+        done(new Error(errNode));
+      });
+    });
 
     it('should return 404', done => {
       chai
       .request(server)
-      .post('/udpateNodePos')
+      .post('/updateLogin')
       .send({ x: 5, y: -5, id: 1001 })
       .then(res => {
         res.should.have.status(404);
@@ -235,17 +300,22 @@ describe('Admin', () => {
     it('should delete edge and return 200', done => {
       chai
       .request(server)
-      .get('/delete')
-      .query({ id: 1 })
-      .then(res => {
-        res.should.have.status(200);
-        res.should.be.json;
-        res.body.should.have.property('status').that.equals('success');
-        dictum.chai(res);
-      })
-      .then(() => done())
-      .catch(err => {
-        done(new Error(err));
+      .get('/edges')
+      .then(edges => {
+        chai
+        .request(server)
+        .get('/delete')
+        .query({ id: edges.body[0].id })
+        .then(res => {
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('success');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
       });
     });
 

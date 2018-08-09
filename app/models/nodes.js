@@ -12,10 +12,12 @@ exports.getModel = db => {
       defaultValue: 0.0
     },
     shape: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      defaultValue: 'dot'
     },
     image: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      defaultValue: ''
     }
   });
   nodes.associate = function(models) {};

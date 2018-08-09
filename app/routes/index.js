@@ -2,6 +2,7 @@
 const express = require('express');
 const config = require('../../config');
 const CASAuthentication = require('cas-authentication');
+
 const router = express.Router();
 const fs = require('fs');
 const visits = require('../middlewares/visits');
@@ -112,9 +113,6 @@ router.get('/view', cas.bounce, visits.view, function(req, res, next) {
 });
 
 router.get('/nodes', cas.block, function(req, res, next) {
-  //TODO add get test with login
-  //TODO add weez api get for login ? manual by admin
-  //TODO use brokenImage: for fallback images
   orm.models.nodes
     .findAll()
     .then(nodes => {
@@ -139,7 +137,7 @@ router.get('/edges', cas.block, function(req, res, next) {
     });
 });
 
-router.post('/udpateNodePos', cas.block, visits.updatePos, function(req, res, next) {
+router.post('/updateNodePos', cas.block, visits.updatePos, function(req, res, next) {
   orm.models.nodes
     .update(
       {
@@ -155,6 +153,30 @@ router.post('/udpateNodePos', cas.block, visits.updatePos, function(req, res, ne
     .then(result => {
       if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
       else res.send({ status: 'success', id: req.body.id });
+    })
+    .catch(err => {
+      res.status(500).send({ status: 'fail', error: err });
+    });
+});
+
+router.get('/updateLogin', function(req, res, next) {
+  orm.models.nodes
+    .update(
+      {
+        shape: 'image',
+        image: `https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=${
+          req.query.login
+        }`
+      },
+      {
+        where: {
+          id: req.query.id
+        }
+      }
+    )
+    .then(result => {
+      if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
+      else res.send({ status: 'success', id: req.query.id });
     })
     .catch(err => {
       res.status(500).send({ status: 'fail', error: err });

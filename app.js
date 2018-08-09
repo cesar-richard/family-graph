@@ -10,6 +10,7 @@ const orm = require('./app/orm');
 const errors = require('./app/middlewares/errors');
 const migrationsManager = require('./migrations');
 const logger = require('./app/logger');
+const cors = require('cors');
 
 const cas = new CASAuthentication(config.common.cas);
 
@@ -25,6 +26,7 @@ const init = () => {
   app.set('view engine', 'twig');
   app.set('views', path.join(__dirname, 'app/views'));
 
+  app.use(cors());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cookieParser());

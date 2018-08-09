@@ -22,9 +22,9 @@
 		height: 700px;
 		border: 1px solid lightgray;
 	}
-	</style>
+</style>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 	var network,nodes,edges;
 	function objectToArray(obj) {
 		return Object.keys(obj).map(function (key) {
@@ -38,7 +38,8 @@
 		var  options = {
 			nodes: {
 				shape: 'dot',
-				size: 16
+				size: 16,
+				brokenImage: '/img/no-image-icon.png'
 			},
 			physics: {
 				forceAtlas2Based: {
@@ -69,6 +70,17 @@
 		});
 	}
 
+	function checkImage(url,callback){
+		var s = document.createElement("IMG");
+		s.src = url
+		s.onerror = function(){
+			callback(false);
+		}
+		s.onload = function(){
+			callback(true);
+		}
+	}
+
 	$(function(){
 		var socket = io();
 		$( ".namecomplete" ).autocomplete({
@@ -81,6 +93,24 @@
 			var nodes = objectToArray(network.getPositions());
 			nodes.forEach(function(node, index){
 				$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
+				});
+			});
+		});
+
+		$("#updateLogins").click(function(event) {
+			event.preventDefault();
+			$.get( '/nodes', function(nodes) {
+				nodes.forEach(function(node, index){
+					var firstName = node.label.split(' ').slice(0, -1).join(' ');
+					var lastName = node.label.split(' ').slice(-1).join(' ');
+					$.get( 'http://assos.utc.fr/nuitfauve/find.php',{ "key": 'nf16enculey', 'prenom': firstName, 'nom': lastName }, function(findData) {
+						if(findData){
+							checkImage('https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username='+findData.login, (utcData)=> {
+								if(utcData===true)
+									$.get( '/updateLogin',{"id": node.id, "login": findData.login}, function(res) {});
+							});
+						}
+					});
 				});
 			});
 		});
@@ -107,7 +137,10 @@
 			formatters: {
 				"commands": function(column, row)
 				{
-					return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
+					if(row.creator === "{{user}}" || "{{user}}" === "cerichar")
+						return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
+					else
+						return "";
 				}
 			}
 		}).on("loaded.rs.jquery.bootgrid", function()
@@ -131,10 +164,10 @@
 			});
 		});
 		startNetwork();
-		socket.on('node add', nodes.add);
 		socket.on('edge add', edges.add);
+		socket.on('node add', nodes.add);
 	});	
-	</script>
+</script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -190,10 +223,9 @@
 						</th>
 						<th data-column-id="commands" data-formatter="commands" data-sortable="false">
 							Supprimer
-						</th>
-						{% if user == "cerichar" %}<th data-column-id="creator">
+						</th><th data-column-id="creator" data-visible="false">
 							Createur
-						</th>{% endif %}
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -202,13 +234,12 @@
 						<td>{{link.id}}</td>
 						<td>{{link.parent.label}}</td>
 						<td>{{link.child.label}}</td>
-						<td>{% if user == link.creator or user == "cerichar" %}
+						<td>
 							<button class="btn btn-danger delete" id="add" linkid="{{link.id}}" >
 								X
 							</button>
-							{% endif %}
 						</td>
-						{% if user == "cerichar" %}<td>{{link.creator}}</td>{% endif %}
+						<td>{{link.creator}}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -229,7 +260,7 @@
 		</div>
 		<div class="col-md-6" id="mynetwork">
 		</div>
-		{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button>{% endif %}
+		{% if user == "cerichar" %}<button class="btn btn-primary" id="save" >save positions</button><button class="btn btn-primary" id="updateLogins" >Update Logins</button>{% endif %}
 	</div>
 </div>
 </body>

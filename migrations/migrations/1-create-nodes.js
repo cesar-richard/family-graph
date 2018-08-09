@@ -18,6 +18,9 @@ module.exports = {
       y: {
         type: Sequelize.FLOAT
       },
+      shape: {
+        type: Sequelize.STRING
+      },
       image: {
         type: Sequelize.STRING
       },

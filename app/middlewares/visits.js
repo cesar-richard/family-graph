@@ -17,7 +17,7 @@ function visit(route, req, res, next) {
       res.status(500).send(err);
     });
     */
-};
+}
 
 exports.home = (req, res, next) => {
   visit('home', req, res, next);
