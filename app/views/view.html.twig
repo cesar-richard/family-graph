@@ -136,10 +136,13 @@
 					network = new vis.Network(container, data, options);
 					options.physics.enabled=true;
 					network.setOptions(options);
+					socket.on('node add', nodes.add);
+					socket.on('edge add'edges.add);
 				});
 			});
 		}
 		$(function(){
+			var socket = io();
 			startNetwork();
 			{% if user == "cerichar" %}
 			$("#save").click(function(event) {
@@ -152,15 +155,6 @@
 				});
 			});
 			{% endif %}
-			var socket = io();
-			socket.on('node add', function(msg){
-				console.log("NODE ADD ",msg);
-				nodes.add(msg);
-			});
-			socket.on('edge add', function(msg){
-				console.log("EDGE ADD ",msg);
-				edges.add(msg);
-			});
 		});
 	</script>
 </body>
