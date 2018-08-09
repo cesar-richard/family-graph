@@ -92,7 +92,7 @@
 			event.preventDefault();
 			var nodes = objectToArray(network.getPositions());
 			nodes.forEach(function(node, index){
-				$.post( '/udpateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
+				$.post( '/updateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
 				});
 			});
 		});
