@@ -48,4 +48,4 @@ vulnerabilities:
   before_script:
     - npm install
   script:
-    - npm run nsp
+    - npm audit
