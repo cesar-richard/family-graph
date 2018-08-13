@@ -11,7 +11,7 @@ exports.DB_URL =
 
 exports.init = () => {
   const db = new Sequelize(exports.DB_URL, {
-    logging: config.isDevelopment ? logger.info : false
+    logging: config.logger.db
   });
   models.define(db);
   exports.models = db.models;
