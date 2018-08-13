@@ -11,6 +11,7 @@ service:
   - mysql
 cache:
   directories:
+    - "$HOME/.npm"
     - "node_modules"
 before_install:
   - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
