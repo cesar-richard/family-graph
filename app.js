@@ -14,8 +14,8 @@ const cors = require('cors');
 
 const cas = new CASAuthentication(config.common.cas);
 
-const routesApi = require('./app/routes/index');
-const routesRoot = require('./app/routes/root');
+const routesRoot = require('./app/routes/index');
+const routesApi = require('./app/routes/api');
 
 const init = () => {
   const app = express();
