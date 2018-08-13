@@ -13,6 +13,7 @@ variables:
 
 cache:
   paths:
+  - "$HOME/.npm"
   - node_modules/
 
 stages:
@@ -21,14 +22,14 @@ stages:
 migrations:
   stage: test
   before_script:
-    - npm install
+    - npm ci
   script:
     - npm run migrations
 
 codecov:
   stage: test
   before_script:
-    - npm install
+    - npm ci
     - npm run migrations
     - npm install -g codecov
   script:
@@ -38,7 +39,7 @@ lint:
   stage: test
   services: []
   before_script:
-    - npm install
+    - npm ci
   script:
     - npm run lint
 
@@ -46,6 +47,6 @@ vulnerabilities:
   stage: test
   services: []
   before_script:
-    - npm install
+    - npm ci
   script:
-    - npm run nsp
+    - npm audit

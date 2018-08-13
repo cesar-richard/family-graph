@@ -22,7 +22,8 @@ const assignObject = (target, source) => {
 
 const config = {
   logger: {
-    level: 'info'
+    level: 'info',
+    db: false
   },
   common: {
     debug: true,

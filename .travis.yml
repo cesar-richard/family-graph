@@ -11,9 +11,15 @@ service:
   - mysql
 cache:
   directories:
+    - "$HOME/.npm"
     - "node_modules"
 before_install:
   - mysql -e "CREATE DATABASE IF NOT EXISTS testbase;"
+install:
+  - npm ci
+cache:
+  directories:
+  - "$HOME/.npm"
 before_script:
   - cp ./migrations/config.js.travis ./migrations/config.js
 #  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
