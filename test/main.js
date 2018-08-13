@@ -5,6 +5,13 @@ const chai = require('chai'),
 
 global.io = { emit(a, b) {} };
 
+function generateName() {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
+
 describe('HTML', () => {
   describe('/NOTHINGATALL', () => {
     it('should return 404 page', done => {
@@ -60,15 +67,11 @@ describe('HTML', () => {
 
 describe('API', () => {
   describe('/api/getNodeId', () => {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-
     it('should create node and return 201', done => {
       chai
         .request(server)
         .post('/api/getNodeId')
-        .send({ who: text })
+        .send({ who: generateName() })
         .then(res => {
           res.should.have.status(201);
           res.should.be.json;
@@ -103,20 +106,21 @@ describe('API', () => {
 
   describe('/api/getnodes', () => {
     it('should return node array containing node', done => {
+      const nodeName = generateName();
       chai
         .request(server)
         .post('/api/getNodeId')
-        .send({ who: 'B' })
+        .send({ who: nodeName })
         .then(node => {
           chai
             .request(server)
             .get('/api/getnodes')
-            .query({ term: 'B' })
+            .query({ term: nodeName })
             .then(res => {
               res.should.have.status(200);
               res.should.be.json;
               res.body.should.be.a('array');
-              res.body[0].should.have.property('label').that.equals('B');
+              res.body[0].should.have.property('label').that.equals(nodeName);
               dictum.chai(res);
             })
             .then(() => done())
@@ -187,20 +191,27 @@ describe('API', () => {
 
 describe('Admin', () => {
   it('should find node and return 200', done => {
+    const nodeName = generateName();
     chai
       .request(server)
       .post('/api/getNodeId')
-      .send({ who: 'B' })
-      .then(res => {
-        res.should.have.status(200);
-        res.should.be.json;
-        res.body.should.have.property('status').that.equals('success');
-        res.body.should.have.property('method').that.equals('find');
-        dictum.chai(res);
-      })
-      .then(() => done())
-      .catch(err => {
-        done(new Error(err));
+      .send({ who: nodeName })
+      .then(node => {
+        chai
+          .request(server)
+          .post('/api/getNodeId')
+          .send({ who: nodeName })
+          .then(res => {
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.have.property('status').that.equals('success');
+            res.body.should.have.property('method').that.equals('find');
+            dictum.chai(res);
+          })
+          .then(() => done())
+          .catch(err => {
+            done(new Error(err));
+          });
       });
   });
 
