@@ -14,7 +14,8 @@ const cors = require('cors');
 
 const cas = new CASAuthentication(config.common.cas);
 
-const routes = require('./app/routes/index');
+const routesApi = require('./app/routes/index');
+const routesRoot = require('./app/routes/root');
 
 const init = () => {
   const app = express();
@@ -39,7 +40,8 @@ const init = () => {
   );
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.use('/', routes);
+  app.use('/api/', routesApi);
+  app.use('/', routesRoot);
 
   orm.init(app);
 

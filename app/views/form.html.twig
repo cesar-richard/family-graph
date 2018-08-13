@@ -55,8 +55,8 @@
 				}
 			}
 		};
-		$.get( '/nodes', function(nodelist) {
-			$.get( '/edges', function(edgelist) {
+		$.get( '/api/nodes', function(nodelist) {
+			$.get( '/api/edges', function(edgelist) {
 				nodes = new vis.DataSet(nodelist);
 				edges = new vis.DataSet(edgelist);
 				var data = {
@@ -87,7 +87,7 @@
 	$(function(){
 		var socket = io();
 		$( ".namecomplete" ).autocomplete({
-			source: "/getnodes",
+			source: "/api/getnodes",
 			minLength: 3
 		});
 		{% if user == "cerichar" %}
@@ -95,14 +95,14 @@
 			event.preventDefault();
 			var nodes = objectToArray(network.getPositions());
 			nodes.forEach(function(node, index){
-				$.post( '/updateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
+				$.post( '/api/updateNodePos',{"id": node.id, "x": node.x, "y":node.y}, function(res) {
 				});
 			});
 		});
 
 		$("#updateLogins").click(function(event) {
 			event.preventDefault();
-			$.get( '/nodes', function(nodes) {
+			$.get( '/api/nodes', function(nodes) {
 				nodes.forEach(function(node, index){
 					var firstName = node.label.split(' ').slice(0, -1).join(' ');
 					var lastName = node.label.split(' ').slice(-1).join(' ');
@@ -110,7 +110,7 @@
 						if(findData){
 							checkImage('https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username='+findData.login, (utcData)=> {
 								if(utcData===true)
-									$.get( '/updateLogin',{"id": node.id, "login": findData.login}, function(res) {});
+									$.get( '/api/updateLogin',{"id": node.id, "login": findData.login}, function(res) {});
 							});
 						}
 					});
@@ -124,11 +124,11 @@
 			var toTxt = $("#to").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 			if(fromTxt=="" || toTxt=="")
 				return;
-			$.post( '/getNodeId',{ who: fromTxt}, function (data){
+			$.post( '/api/getNodeId',{ who: fromTxt}, function (data){
 				fromId=data.id;
-				$.post( '/getNodeId',{ who: toTxt}, function (data){
+				$.post( '/api/getNodeId',{ who: toTxt}, function (data){
 					toId=data.id;
-					$.post( '/add',{ from: fromId, to: toId }, function(data) {
+					$.post( '/api/add',{ from: fromId, to: toId }, function(data) {
 						$("#table").bootgrid("append",[{ "id":data.id, "parent":fromTxt, "child":toTxt, "creator":"{{user}}", "status":1 }]);
 						$("#to").val("");
 					});
@@ -151,7 +151,7 @@
 			table.find(".delete").on("click", function(e)
 			{	
 				let id = $(this).data("row-id");
-				$.get( '/delete',{ "id": id }, function(data) {
+				$.get( '/api/delete',{ "id": id }, function(data) {
 					$("#table").bootgrid("remove",[id]);
 				});
 			});
@@ -161,7 +161,7 @@
 			var txt = $("#graphSearchInput").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 			if(txt=="")
 				return;
-			$.post( '/getNodeId',{ who: txt, shouldcreate: false}, function (data){
+			$.post( '/api/getNodeId',{ who: txt, shouldcreate: false}, function (data){
 				if(data.id!==null)
 					network.selectNodes([data.id]);network.fit({nodes:[data.id]});
 			});

@@ -59,7 +59,7 @@ describe('HTML', () => {
 });
 
 describe('API', () => {
-  describe('/getNodeId', () => {
+  describe('/api/getNodeId', () => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -67,7 +67,7 @@ describe('API', () => {
       it('should create node and return 201', done => {
         chai
         .request(server)
-        .post('/getNodeId')
+        .post('/api/getNodeId')
         .send({ who: text })
         .then(res => {
           res.should.have.status(201);
@@ -85,7 +85,7 @@ describe('API', () => {
     it('should not find any node and return 404', done => {
       chai
       .request(server)
-      .post('/getNodeId')
+      .post('/api/getNodeId')
       .send({ who: 'NOTHINGATALL', shouldcreate: false })
       .then(res => {
         res.should.have.status(404);
@@ -101,16 +101,16 @@ describe('API', () => {
     });
   });
 
-  describe('/getnodes', () => {
+  describe('/api/getnodes', () => {
     it('should return node array containing node', done => {
       chai
       .request(server)
-      .post('/getNodeId')
+      .post('/api/getNodeId')
       .send({ who: 'B' })
       .then(node => {
         chai
         .request(server)
-        .get('/getnodes')
+        .get('/api/getnodes')
         .query({ term: 'B' })
         .then(res => {
           res.should.have.status(200);
@@ -127,11 +127,11 @@ describe('API', () => {
     });
   });
 
-  describe('/add', () => {
+  describe('/api/add', () => {
     it('should find node and return 200', done => {
       chai
       .request(server)
-      .post('/add')
+      .post('/api/add')
       .send({ from: 1, to: 1 })
       .then(res => {
         res.should.have.status(200);
@@ -149,11 +149,11 @@ describe('API', () => {
     });
   });
 
-  describe('/nodes', () => {
+  describe('/api/nodes', () => {
     it('should return nodes list', done => {
       chai
       .request(server)
-      .get('/nodes')
+      .get('/api/nodes')
       .then(res => {
         res.should.have.status(200);
         res.should.be.json;
@@ -166,11 +166,11 @@ describe('API', () => {
     });
   });
 
-  describe('/edges', () => {
+  describe('/api/edges', () => {
     it('should return edges list', done => {
       chai
       .request(server)
-      .get('/edges')
+      .get('/api/edges')
       .query({ id: 1 })
       .then(res => {
         res.should.have.status(200);
@@ -189,7 +189,7 @@ describe('Admin', () => {
   it('should find node and return 200', done => {
     chai
     .request(server)
-    .post('/getNodeId')
+    .post('/api/getNodeId')
     .send({ who: 'B' })
     .then(res => {
       res.should.have.status(200);
@@ -204,16 +204,16 @@ describe('Admin', () => {
     });
   });
 
-  describe('/updateNodePos', () => {
+  describe('/api/updateNodePos', () => {
     it('should update node position and return 200', done => {
       chai
       .request(server)
-      .post('/getNodeId')
+      .post('/api/getNodeId')
       .send({ who: 'C' })
       .then(node => {
         chai
         .request(server)
-        .post('/updateNodePos')
+        .post('/api/updateNodePos')
         .send({ x: 5, y: -5, id: node.body.id })
         .then(res => {
           res.should.have.status(200);
@@ -235,7 +235,7 @@ describe('Admin', () => {
     it('should return 404', done => {
       chai
       .request(server)
-      .post('/updateNodePos')
+      .post('/api/updateNodePos')
       .send({ x: 5, y: -5, id: 1001 })
       .then(res => {
         res.should.have.status(404);
@@ -250,16 +250,16 @@ describe('Admin', () => {
     });
   });
 
-    describe('/updateLogin', () => {
+    describe('/api/updateLogin', () => {
     it('should update node image and return 200', done => {
       chai
       .request(server)
-      .post('/getNodeId')
+      .post('/api/getNodeId')
       .send({ who: 'C' })
       .then(node => {
         chai
         .request(server)
-        .get('/updateLogin')
+        .get('/api/updateLogin')
         .query({ login: 'fakelogin', id: node.body.id })
         .then(res => {
           res.should.have.status(200);
@@ -281,7 +281,7 @@ describe('Admin', () => {
     it('should return 404', done => {
       chai
       .request(server)
-      .post('/updateLogin')
+      .post('/api/updateLogin')
       .send({ x: 5, y: -5, id: 1001 })
       .then(res => {
         res.should.have.status(404);
@@ -296,15 +296,15 @@ describe('Admin', () => {
     });
   });
 
-  describe('/delete', () => {
+  describe('/api/delete', () => {
     it('should delete edge and return 200', done => {
       chai
       .request(server)
-      .get('/edges')
+      .get('/api/edges')
       .then(edges => {
         chai
         .request(server)
-        .get('/delete')
+        .get('/api/delete')
         .query({ id: edges.body[0].id })
         .then(res => {
           res.should.have.status(200);
@@ -322,7 +322,7 @@ describe('Admin', () => {
     it('should return 404', done => {
       chai
       .request(server)
-      .get('/delete')
+      .get('/api/delete')
       .query({ id: 1001 })
       .then(res => {
         res.should.have.status(404);
