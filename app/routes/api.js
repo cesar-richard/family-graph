@@ -12,6 +12,8 @@ const cas = new CASAuthentication(config.common.cas);
 const orm = require('../orm');
 
 router.get('/delete', cas.block, visits.delete, function(req, res, next) {
+  if (!req.query || !req.query.id)
+    return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
   let condition = { where: { id: req.query.id, creator: req.session[cas.session_name] } };
   if (req.session[cas.session_name] === 'cerichar') condition = { where: { id: req.query.id } };
   orm.models.edges
@@ -27,6 +29,8 @@ router.get('/delete', cas.block, visits.delete, function(req, res, next) {
 });
 
 router.post('/getNodeId', cas.block, function(req, res, next) {
+  if (!req.body || !req.body.who)
+    return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
   req.body.shouldcreate =
     typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
   orm.models.nodes
@@ -61,6 +65,8 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
 });
 
 router.get('/getnodes', function(req, res, next) {
+  if (!req.query || !req.query.term)
+    return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
   orm.models.nodes
     .findAll({ where: { label: { [orm.Op.like]: `%${req.query.term}%` } } })
     .then(nodes => {
@@ -70,6 +76,8 @@ router.get('/getnodes', function(req, res, next) {
 });
 
 router.post('/add', cas.block, function(req, res, next) {
+  if (!req.body || !req.body.from || !req.body.to)
+    return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
   orm.models.edges
     .create({
       from: req.body.from,
@@ -111,6 +119,8 @@ router.get('/edges', cas.block, function(req, res, next) {
 });
 
 router.post('/updateNodePos', cas.block, visits.updatePos, function(req, res, next) {
+  if (!req.body || !req.body.x || !req.body.y || !req.body.id)
+    return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
   orm.models.nodes
     .update(
       {
@@ -131,6 +141,8 @@ router.post('/updateNodePos', cas.block, visits.updatePos, function(req, res, ne
 });
 
 router.get('/updateLogin', function(req, res, next) {
+  if (!req.query || !req.query.id)
+    return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
   orm.models.nodes
     .update(
       {
