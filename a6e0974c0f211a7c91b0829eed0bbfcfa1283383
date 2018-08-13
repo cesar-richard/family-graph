@@ -1,0 +1,6 @@
+[ver:1,total:120]
+.gitlab-ci.yml:45,1534179600:45,m
+.codeclimate.yml:30,1534179600:30,r
+package.json:15,1534179600:15,m
+.travis.yml:15,1534179600:15,r
+codecov.yml:15,1534179600:15,r
