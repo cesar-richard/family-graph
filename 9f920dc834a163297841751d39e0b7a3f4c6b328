@@ -1,0 +1,8 @@
+[ver:1,total:1620]
+.gitlab-ci.yml:480,1534179600:360,1534183200:120,r
+package.json:290,1534183200:290,r
+test/app.js:270,1534183200:270,r
+.travis.yml:250,1534183200:250,r
+test/main.js:170,1534183200:170,r
+sftp-config.json:140,1534183200:140,r
+.gitignore:20,1534183200:20,r
