@@ -18,4 +18,8 @@ exports.init = () => {
   return config.isTesting ? Promise.resolve() : db.sync();
 };
 
+exports.errorHandler = (err, req, res, next) => {
+  return res.status(500).send({ status: 'fail', error: err });
+};
+
 exports.Op = Sequelize.Op;

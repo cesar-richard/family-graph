@@ -17,9 +17,7 @@ router.get('/', cas.bounce, visits.home, function(req, res, next) {
     .then(edges => {
       res.render('form.html.twig', { links: edges, user: req.session[cas.session_name] });
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.get('/view', cas.bounce, visits.view, function(req, res, next) {

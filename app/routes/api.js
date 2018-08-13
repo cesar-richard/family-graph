@@ -23,9 +23,7 @@ router.get('/delete', cas.block, visits.delete, function(req, res, next) {
         res.send({ status: 'success' });
       }
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.post('/getNodeId', cas.block, function(req, res, next) {
@@ -59,9 +57,7 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
         }
       }
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.get('/getnodes', function(req, res, next) {
@@ -70,9 +66,7 @@ router.get('/getnodes', function(req, res, next) {
     .then(nodes => {
       res.send(nodes);
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.post('/add', cas.block, function(req, res, next) {
@@ -92,9 +86,7 @@ router.post('/add', cas.block, function(req, res, next) {
       });
       res.send({ status: 'success', id: edge.id, from: req.body.from, to: req.body.to });
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.get('/nodes', cas.block, function(req, res, next) {
@@ -103,9 +95,7 @@ router.get('/nodes', cas.block, function(req, res, next) {
     .then(nodes => {
       res.send(nodes);
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.get('/edges', cas.block, function(req, res, next) {
@@ -117,9 +107,7 @@ router.get('/edges', cas.block, function(req, res, next) {
       });
       res.send(edges);
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.post('/updateNodePos', cas.block, visits.updatePos, function(req, res, next) {
@@ -139,9 +127,7 @@ router.post('/updateNodePos', cas.block, visits.updatePos, function(req, res, ne
       if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
       else res.send({ status: 'success', id: req.body.id });
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 router.get('/updateLogin', function(req, res, next) {
@@ -163,9 +149,7 @@ router.get('/updateLogin', function(req, res, next) {
       if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
       else res.send({ status: 'success', id: req.query.id });
     })
-    .catch(err => {
-      res.status(500).send({ status: 'fail', error: err });
-    });
+    .catch(orm.errorHandler);
 });
 
 module.exports = router;
