@@ -162,4 +162,8 @@ router.get('/updateLogin', function(req, res, next) {
     .catch(orm.errorHandler);
 });
 
+router.get('/checkError', function(req, res, next) {
+  orm.errorHandler('FakeError',req, res, next);
+});
+
 module.exports = router;
