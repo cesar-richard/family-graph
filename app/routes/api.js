@@ -53,9 +53,7 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
               });
               res.status(201).send({ status: 'success', method: 'create', id: node.id });
             })
-            .catch(err => {
-              res.status(500).send({ status: 'fail', error: err });
-            });
+            .catch(orm.errorHandler);
         } else {
           res.status(404).send({ status: 'fail', message: 'node not found' });
         }
