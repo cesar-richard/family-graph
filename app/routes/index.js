@@ -15,13 +15,13 @@ router.get('/', cas.bounce, visits.home, function(req, res, next) {
   orm.models.edges
     .findAll({ include: [{ all: true }] })
     .then(edges => {
-      res.render('form.html.twig', { links: edges, user: req.session[cas.session_name] });
+      res.render('index', { links: edges, user: req.session[cas.session_name] });
     })
     .catch(orm.errorHandler);
 });
 
 router.get('/view', cas.bounce, visits.view, function(req, res, next) {
-  res.render('view.html.twig', { user: req.session[cas.session_name] });
+  res.render('view', { user: req.session[cas.session_name] });
 });
 
 module.exports = router;
