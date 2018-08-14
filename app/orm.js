@@ -19,7 +19,7 @@ exports.init = () => {
 };
 
 exports.errorHandler = (err, req, res, next) => {
-  return res.status(500).send({ status: 'fail', error: err });
+  return res.status(500).send({ status: 'fail', message: err });
 };
 
 exports.Op = Sequelize.Op;

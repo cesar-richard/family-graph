@@ -24,7 +24,7 @@ const init = () => {
 
   app.locals.title = config.common.locals.appTitle;
 
-  app.set('view engine', 'twig');
+  app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, 'app/views'));
 
   app.use(cors());
@@ -55,7 +55,7 @@ const init = () => {
 
   app.use(function(err, req, res, next) {
     res.status(err.status);
-    res.render('error.html.twig', {
+    res.render('error', {
       message: err.message,
       error: err
     });
