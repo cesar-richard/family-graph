@@ -163,7 +163,7 @@ router.get('/updateLogin', function(req, res, next) {
 });
 
 router.get('/checkError', function(req, res, next) {
-  orm.errorHandler('FakeError',req, res, next);
+  orm.errorHandler('FakeError', req, res, next);
 });
 
 module.exports = router;
