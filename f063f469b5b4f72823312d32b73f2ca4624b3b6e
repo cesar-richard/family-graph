@@ -1,0 +1,7 @@
+[ver:1,total:660]
+app/routes/api.js:330,1534352400:330,m
+test/unitarytests.js:180,1534352400:180,r
+app/orm.js:60,1534352400:60,r
+app/routes/index.js:30,1534352400:30,m
+config/staging.js:30,1534460400:30,r
+.codeclimate.yml:30,1534460400:30,r
