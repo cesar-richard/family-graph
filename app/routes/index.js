@@ -1,4 +1,3 @@
-/* eslint no-console: 0 */
 const express = require('express');
 const config = require('../../config');
 const CASAuthentication = require('cas-authentication');
