@@ -1,4 +1,3 @@
-/* eslint no-console: 0 */
 const express = require('express');
 const config = require('../../config');
 const CASAuthentication = require('cas-authentication');
@@ -22,6 +21,10 @@ router.get('/', cas.bounce, visits.home, function(req, res, next) {
 
 router.get('/view', cas.bounce, visits.view, function(req, res, next) {
   res.render('view', { user: req.session[cas.session_name] });
+});
+
+router.get('/admin', cas.bounce, visits.view, function(req, res, next) {
+  res.render('admin', { user: req.session[cas.session_name] });
 });
 
 module.exports = router;
