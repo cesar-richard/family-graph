@@ -1,0 +1,70 @@
+extends admin_layout.pug
+
+block pagetitle
+  | #{pagetitle}
+
+block stylesheets
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css")
+
+block javascripts
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.js")
+  script(type="text/javascript").
+    const localLogin = "#{user}";
+    $(function(){
+      $("#navNodes").addClass("active");
+      var table = $("#table").bootgrid({
+        formatters: {
+          "commands": function(column, row)
+          {
+              return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
+          }
+        },
+        css: {
+          pagination: "pagination",
+          paginationButton: "page-link",
+        },
+        templates: {
+          pagination: '<ul class="{{css.pagination}} pagination-sm"></ul>',
+          paginationItem: '<li class="page-item"><a class="page-link" data-page="{{ctx.page}}">{{ctx.text}}</a></li>'
+        }
+      }).on("loaded.rs.jquery.bootgrid", function()
+      {
+        table.find(".delete").on("click", function(e)
+        {
+          let id = $(this).data("row-id");
+          $.get( '/api/deletenode',{ "id": id }, function(data) {
+            $("#table").bootgrid("remove",[id]);
+          });
+        });
+      });
+    });
+
+block content
+  table#table.table.table-striped.table-condensed.table-hover
+    thead
+      tr
+        th(data-column-id="id" data-identifier="true" data-type="numeric" data-visible="false")
+          | Id
+        th(data-column-id="label" data-order="asc")
+          | Label
+        th(data-column-id="x" data-order="asc")
+          | X
+        th(data-column-id="y" data-order="asc")
+          | Y
+        th(data-column-id="shape" data-order="asc")
+          | Shape
+        th(data-column-id="image" data-order="asc")
+          | Image
+        th(data-column-id="commands" data-formatter="commands" data-sortable="false")
+          | Supprimer
+    tbody
+      each node in nodes
+        tr
+          td=node.id
+          td=node.label
+          td=node.x
+          td=node.y
+          td=node.shape
+          td=node.image
+          td
+            button#add.btn.btn-danger.delete(nodeid=node.id) X

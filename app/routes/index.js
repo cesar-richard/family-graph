@@ -23,8 +23,4 @@ router.get('/view', cas.bounce, visits.view, function(req, res, next) {
   res.render('view', { user: req.session[cas.session_name] });
 });
 
-router.get('/admin', cas.bounce, visits.view, function(req, res, next) {
-  res.render('admin', { user: req.session[cas.session_name] });
-});
-
 module.exports = router;

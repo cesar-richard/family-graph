@@ -1,4 +1,4 @@
-var network,nodes,edges;
+var network,nodes,edges,socket;
 function objectToArray(obj) {
 	return Object.keys(obj).map(function (key) {
 		obj[key].id = key;
@@ -54,7 +54,7 @@ function checkImage(url,callback){
 	}
 }
 $(function(){
-	var socket = io();
+	socket = io();
 	$( ".namecomplete" ).autocomplete({
 		source: "/api/getnodes",
 		minLength: 3
@@ -65,12 +65,13 @@ $(function(){
 		var toTxt = $("#to").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
 		if(fromTxt=="" || toTxt=="")
 			return;
-		$.post( '/api/getNodeId',{ who: fromTxt}, function (data){
-			fromId=data.id;
-			$.post( '/api/getNodeId',{ who: toTxt}, function (data){
-				toId=data.id;
-				$.post( '/api/add',{ from: fromId, to: toId }, function(data) {
-					$("#table").bootgrid("append",[{ "id":data.id, "parent":fromTxt, "child":toTxt, "creator":localLogin, "status":1 }]);
+		$.post( '/api/getNodeId',{ who: fromTxt}, function (nodefrom){
+			fromId=nodefrom.id;
+			$.post( '/api/getNodeId',{ who: toTxt}, function (nodeto){
+				toId=nodeto.id;
+				$.post( '/api/add',{ from: fromId, to: toId }, function(edge) {
+					console.log(nodefrom,nodeto,edge);
+					$("#table").bootgrid("append",[{ "id":edge.id, "parent":fromTxt, "child":toTxt, "creator":localLogin, "status":1 }]);
 					$("#to").val("");
 				});
 			});

@@ -16,13 +16,14 @@ const cas = new CASAuthentication(config.common.cas);
 
 const routesRoot = require('./app/routes/index');
 const routesApi = require('./app/routes/api');
+const routesAdmin = require('./app/routes/admin');
 
 const init = () => {
   const app = express();
   const port = config.common.port || 8080;
   module.exports = app;
 
-  app.locals.title = config.common.locals.appTitle;
+  app.locals.appTitle = config.common.locals.appTitle;
 
   app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, 'app/views'));
@@ -41,6 +42,7 @@ const init = () => {
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use('/api/', routesApi);
+  app.use('/admin/', routesAdmin);
   app.use('/', routesRoot);
 
   orm.init(app);
