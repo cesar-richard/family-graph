@@ -56,6 +56,7 @@ const init = () => {
   });
 
   app.use(function(err, req, res, next) {
+    logger.error(err);
     res.status(err.status);
     res.render('error', {
       message: err.message,
