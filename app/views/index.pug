@@ -27,39 +27,37 @@ html
     script(type="text/javascript" src="/js/main.js")
     if user == "cerichar"
       script(type="text/javascript" src="/js/admin.js")
-    script(type="text/javascript")
-      | $(function(){
-      |   $.extend($.fn.bootgrid.Constructor.defaults, {
-      |     css: {
-      |       pagination: "pagination",
-      |       paginationButton: "page-link",
-      |     },
-      |     templates: {
-      |       pagination: '<ul class="{{css.pagination}} pagination-sm"></ul>',
-      |         paginationItem: '<li class="page-item"><a class="page-link" data-page="{{ctx.page}}">{{ctx.text}}</a></li>'
-      |       }
-      |   });
-      |   var table = $("#table").bootgrid({
-      |    formatters: {
-      |      "commands": function(column, row)
-      |      {
-      |        if(row.creator === "#{user}" || localLogin === "#{user}")
-      |          return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
-      |        else
-      |          return "";
-      |      }
-      |    }
-      |   }).on("loaded.rs.jquery.bootgrid", function()
-      |   {
-      |    table.find(".delete").on("click", function(e)
-      |    {
-      |      let id = $(this).data("row-id");
-      |      $.get( '/api/delete',{ "id": id }, function(data) {
-      |        $("#table").bootgrid("remove",[id]);
-      |      });
-      |    });
-      |   });
-      | });
+    script(type="text/javascript").
+      $(function(){
+        var table = $("#table").bootgrid({
+          formatters: {
+            "commands": function(column, row)
+            {
+              if(row.creator === "#{user}" || localLogin === "#{user}")
+                return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
+              else
+                return "";
+            }
+          },
+          css: {
+            pagination: "pagination",
+            paginationButton: "page-link",
+          },
+          templates: {
+            pagination: '<ul class="{{css.pagination}} pagination-sm"></ul>',
+              paginationItem: '<li class="page-item"><a class="page-link" data-page="{{ctx.page}}">{{ctx.text}}</a></li>'
+          }
+        }).on("loaded.rs.jquery.bootgrid", function()
+        {
+          table.find(".delete").on("click", function(e)
+          {
+            let id = $(this).data("row-id");
+            $.get( '/api/delete',{ "id": id }, function(data) {
+              $("#table").bootgrid("remove",[id]);
+            });
+          });
+        });
+       });
   body
     .row
       .col-md-12.text-center
