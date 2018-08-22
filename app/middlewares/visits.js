@@ -2,21 +2,14 @@ const config = require('../../config'),
   logger = require('../logger'),
   CASAuthentication = require('cas-authentication'),
   orm = require('../orm'),
-// cas = global.cas;
   cas = new CASAuthentication(config.common.cas);
 
 function visit(route, req, res, next) {
   logger.info(`${route} for ${req.session[cas.session_name]}`);
-  orm.models.visits
-    .create({ username: req.session[cas.session_name], route: route })
-    .then(() => {
-      next();
-      return null;
-    })
-    .catch(err => {
-      res.status(500).send(err);
-    });
-      //next();
+  orm.models.visits.create({ username: req.session[cas.session_name], route }).then(() => {
+    next();
+    return null;
+  });
 }
 
 exports.home = (req, res, next) => {
@@ -36,17 +29,17 @@ exports.updatePos = (req, res, next) => {
 };
 
 exports.admin_home = (req, res, next) => {
-  visit(`Admin home`, req, res, next);
+  visit('Admin home', req, res, next);
 };
 
 exports.admin_nodes = (req, res, next) => {
-  visit(`Admin nodes`, req, res, next);
+  visit('Admin nodes', req, res, next);
 };
 
 exports.admin_edges = (req, res, next) => {
-  visit(`Admin edges`, req, res, next);
+  visit('Admin edges', req, res, next);
 };
 
 exports.admin_logs = (req, res, next) => {
-  visit(`Admin logs`, req, res, next);
+  visit('Admin logs', req, res, next);
 };

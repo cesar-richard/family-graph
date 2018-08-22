@@ -15,10 +15,10 @@ router.get('/', cas.bounce, visits.admin_home, function(req, res, next) {
 });
 
 router.get('/nodes', cas.bounce, visits.admin_nodes, function(req, res, next) {
-	orm.models.nodes
+  orm.models.nodes
     .findAll({ include: [{ all: true }] })
     .then(nodes => {
-      res.render('admin_nodes', { pagetitle: 'Nodes', nodes: nodes, user: req.session[cas.session_name] });
+      res.render('admin_nodes', { pagetitle: 'Nodes', nodes, user: req.session[cas.session_name] });
     })
     .catch(orm.errorHandler);
 });
@@ -27,16 +27,16 @@ router.get('/edges', cas.bounce, visits.admin_edges, function(req, res, next) {
   orm.models.edges
     .findAll({ include: [{ all: true }] })
     .then(edges => {
-        res.render('admin_edges', { pagetitle: 'Edges', edges: edges, user: req.session[cas.session_name] });
+      res.render('admin_edges', { pagetitle: 'Edges', edges, user: req.session[cas.session_name] });
     })
     .catch(orm.errorHandler);
 });
 
 router.get('/logs', cas.bounce, visits.admin_logs, function(req, res, next) {
-	orm.models.visits
+  orm.models.visits
     .findAll({ include: [{ all: true }] })
     .then(logs => {
-		res.render('admin_logs', { pagetitle: 'Logs', logs: logs, user: req.session[cas.session_name] });
+      res.render('admin_logs', { pagetitle: 'Logs', logs, user: req.session[cas.session_name] });
     })
     .catch(orm.errorHandler);
 });
