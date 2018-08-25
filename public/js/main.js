@@ -38,8 +38,8 @@ function startNetwork() {
 			network = new vis.Network(container, data, options);
 			options.physics.enabled=true;
 			network.setOptions(options);
-			socket.on('edge add', edges.add);
-			socket.on('node add', nodes.add);
+			socket.on('edge add', data=>{edges.add(data)});
+			socket.on('node add', data=>{nodes.add(data)});
 		});
 	});
 }
@@ -61,8 +61,8 @@ $(function(){
 	});
 	$( "#add" ).click(function(event) {
 		event.preventDefault();
-		var fromTxt = $("#from").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
-		var toTxt = $("#to").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
+		var fromTxt = $("#from").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+		var toTxt = $("#to").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		if(fromTxt=="" || toTxt=="")
 			return;
 		$.post( '/api/getNodeId',{ who: fromTxt}, function (nodefrom){
@@ -70,7 +70,6 @@ $(function(){
 			$.post( '/api/getNodeId',{ who: toTxt}, function (nodeto){
 				toId=nodeto.id;
 				$.post( '/api/add',{ from: fromId, to: toId }, function(edge) {
-					console.log(nodefrom,nodeto,edge);
 					$("#table").bootgrid("append",[{ "id":edge.id, "parent":fromTxt, "child":toTxt, "creator":localLogin, "status":1 }]);
 					$("#to").val("");
 				});
@@ -79,12 +78,14 @@ $(function(){
 	});
 	$("#graphFindBtn").click(function(event) {
 		event.preventDefault();
-		var txt = $("#graphSearchInput").val().normalize('NFD').replace(/[\\u0300-\u036f]/g, "");
+		var txt = $("#graphSearchInput").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		if(txt=="")
 			return;
 		$.post( '/api/getNodeId',{ who: txt, shouldcreate: false}, function (data){
-			if(data.id!==null)
-				network.selectNodes([data.id]);network.fit({nodes:[data.id]});
+			if(data.id!==null){
+				network.selectNodes([data.id]);
+				network.fit({nodes:[data.id]});
+			}
 		});
 	});
 	startNetwork();
