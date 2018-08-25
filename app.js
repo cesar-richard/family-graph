@@ -1,7 +1,7 @@
 const config = require('./config');
 const express = require('express');
+const favicon = require('express-favicon');
 const path = require('path');
-const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -16,13 +16,14 @@ const cas = new CASAuthentication(config.common.cas);
 
 const routesRoot = require('./app/routes/index');
 const routesApi = require('./app/routes/api');
+const routesAdmin = require('./app/routes/admin');
 
 const init = () => {
   const app = express();
   const port = config.common.port || 8080;
   module.exports = app;
 
-  app.locals.title = config.common.locals.appTitle;
+  app.locals.appTitle = config.common.locals.appTitle;
 
   app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, 'app/views'));
@@ -38,9 +39,11 @@ const init = () => {
       saveUninitialized: true
     })
   );
+  app.use(favicon(`${__dirname}/public/img/favicon.ico`));
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use('/api/', routesApi);
+  app.use('/admin/', routesAdmin);
   app.use('/', routesRoot);
 
   orm.init(app);
@@ -54,6 +57,7 @@ const init = () => {
   });
 
   app.use(function(err, req, res, next) {
+    logger.error(err);
     res.status(err.status);
     res.render('error', {
       message: err.message,

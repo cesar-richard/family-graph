@@ -1,12 +1,30 @@
 doctype html
 html
   head
+    meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    meta(name="description" content="")
+    meta(name="author" content="Cesar Richard")
     title #{appTitle}
-    script(type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js")
-    script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    link(rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png")
+    link(rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png")
+    link(rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png")
+    link(rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png")
+    link(rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png")
+    link(rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png")
+    link(rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png")
+    link(rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png")
+    link(rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png")
+    link(rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png")
+    link(rel="icon" type="image/png" sizes="32x32"  href="/icons/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="96x96"  href="/icons/favicon-96x96.png")
+    link(rel="icon" type="image/png" sizes="16x16"  href="/icons/favicon-16x16.png")
+    link(rel="manifest"  href="/icons/manifest.json")
+    meta(name="msapplication-TileColor" content="#ffffff")
+    meta(name="msapplication-TileImage" content="/icons/ms-icon-144x144.png")
+    meta(name="theme-color" content="#ffffff")
     link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
+    link(href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/sketchy/bootstrap.min.css", rel="stylesheet", integrity="sha384-5cy8WdlNAGqQwyB33aLiqJoRQQxZsc3TDUkSTahHAx2gMK3o0te7Xqm+nNLe4Ou3", crossorigin="anonymous")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous")
     link(rel="stylesheet" href="/css/jquery.bootgrid.min.css")
     style(type="text/css").
@@ -14,58 +32,69 @@ html
         height: 700px;
         border: 1px solid lightgray;
       }
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
+    script(type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js")
+    script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" integrity="sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=" crossorigin="anonymous")
-    script(type="text/javascript")
+    script(type="text/javascript").
       const localLogin = "#{user}";
     script(src="/js/jquery.bootgrid.min.js")
     script(type="text/javascript" src="/js/main.js")
-    if(user == "cerichar")
+    if user == "cerichar"
       script(type="text/javascript" src="/js/admin.js")
-    script(type="text/javascript")
-      | var table = $("#table").bootgrid({
-      |  formatters: {
-      |    "commands": function(column, row)
-      |    {
-      |      if(row.creator === "#{user}" || localLogin === "#{user}")
-      |        return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
-      |      else
-      |        return "";
-      |    }
-      |  }
-      |}).on("loaded.rs.jquery.bootgrid", function()
-      |{
-      |  table.find(".delete").on("click", function(e)
-      |  {
-      |    let id = $(this).data("row-id");
-      |    $.get( '/api/delete',{ "id": id }, function(data) {
-      |      $("#table").bootgrid("remove",[id]);
-      |    });
-      |  });
-      |});    
+    script(type="text/javascript").
+      $(function(){
+        var table = $("#table").bootgrid({
+          formatters: {
+            "commands": function(column, row)
+            {
+              if(row.creator === "#{user}" || localLogin === "#{user}")
+                return "<button class=\"btn btn-danger delete\" id=\"add\" data-row-id=\"" + row.id + "\">X</button>";
+              else
+                return "";
+            }
+          },
+          css: {
+            pagination: "pagination",
+            paginationButton: "page-link",
+          },
+          templates: {
+            pagination: '<ul class="{{css.pagination}} pagination-sm"></ul>',
+              paginationItem: '<li class="page-item"><a class="page-link" data-page="{{ctx.page}}">{{ctx.text}}</a></li>'
+          }
+        }).on("loaded.rs.jquery.bootgrid", function()
+        {
+          table.find(".delete").on("click", function(e)
+          {
+            let id = $(this).data("row-id");
+            $.get( '/api/delete',{ "id": id }, function(data) {
+              $("#table").bootgrid("remove",[id]);
+            });
+          });
+        });
+       });
   body
-    .container-fluid
-      .row
-        .col-md-10.text-center
-          h1.display-4=appTitle
-            p.lead
-              | Entrez les noms de vos parrains/marraines/fillots/fillottes, officiels/adoptés/disparus/chelous afin de contruire un joli graph !
     .row
-      .col-md-5
+      .col-md-12.text-center
+        h1.display-4=appTitle
+          p.lead
+            | Entrez les noms de vos parrains/marraines/fillots/fillottes, officiels/adoptés/disparus/chelous afin de contruire un joli graph !
+    .row
+      .col-md
         form.form-horizontal(role="form")
           .form-group
             label.col-sm-2.control-label(for="from")
               | Nom du parrain/marraine
-            .col-sm-9
+            .col
               input#from.form-control.namecomplete(name="from")
           .form-group
             label.col-sm-2.control-label(for="to")
               | Nom du fillot(te)
-            .col-sm-9
+            .col
               input#to.form-control.namecomplete(name="to")
           .form-group
-            .col-sm-offset-2.col-sm-9
+            .col-offset-2.col
               button#add.btn.btn-success
                 | Ajouter
         table#table.table.table-striped.table-condensed.table-hover
@@ -91,19 +120,20 @@ html
                   if user == link.creator || user == "cerichar"
                     button#add.btn.btn-danger.delete(linkid=link.id) X
                 if user == "cerichar"
-                  td link.creator
-      h2
-        | Graph 
-        a.btn.btn-primary(href="/view") (cliquez ici pour le voir en grand)
-      div Utilisez la molette pour zoomer
-      .col-md-6
-        form
-          .form-group
-            label(for="graphSearchInput") Recherche
-            input#graphSearchInput.form-control.namecomplete
-            button#graphFindBtn.btn.btn-primary
-              | Rechercher
-      #mynetwork.col-md-6
+                  td=link.creator
+      .col-md
+        h2
+          | Graph 
+          a.btn.btn-primary(href="/view") (cliquez ici pour le voir en grand)
+        div Utilisez la molette pour zoomer
+        .col-md
+          form
+            .form-group
+              label(for="graphSearchInput") Recherche
+              input#graphSearchInput.form-control.namecomplete
+              button#graphFindBtn.btn.btn-primary
+                | Rechercher
+        #mynetwork.col-md
         if user == "cerichar"
           button#save.btn.btn-primary save positions
           button#updateLogins.btn.btn-primary Update Logins
