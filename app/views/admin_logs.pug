@@ -38,11 +38,11 @@ block content
       tr
         th(data-column-id="id" data-identifier="true" data-type="numeric" data-visible="false")
           | Id
-        th(data-column-id="Username" data-order="asc")
+        th(data-column-id="Username")
           | Username
-        th(data-column-id="route" data-order="asc")
+        th(data-column-id="route")
           | Route
-        th(data-column-id="createdAt" data-type="datetime" data-order="asc")
+        th(data-column-id="createdAt" data-type="datetime" data-order="desc")
           | Time
     tbody
       each log in logs
