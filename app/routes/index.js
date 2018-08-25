@@ -11,11 +11,6 @@ const cas = new CASAuthentication(config.common.cas);
 const orm = require('../orm');
 
 router.get('/', cas.bounce, visits.home, function(req, res, next) {
-	global.io.emit('node add', {
-                id:3456,
-                label: "MA BITE OUAI",
-                color: { background: '#F03967', border: '#713E7F' }
-              });
   orm.models.edges
     .findAll({ include: [{ all: true }] })
     .then(edges => {

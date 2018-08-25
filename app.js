@@ -1,7 +1,7 @@
 const config = require('./config');
 const express = require('express');
+const favicon = require('express-favicon');
 const path = require('path');
-const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -39,6 +39,7 @@ const init = () => {
       saveUninitialized: true
     })
   );
+  app.use(favicon(`${__dirname}/public/img/favicon.ico`));
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use('/api/', routesApi);
