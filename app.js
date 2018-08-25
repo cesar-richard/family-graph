@@ -39,7 +39,7 @@ const init = () => {
       saveUninitialized: true
     })
   );
-  app.use(favicon(`${__dirname}/public/img/favicon.ico`));
+  app.use(favicon(`${__dirname}/public/icons/favicon.ico`));
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use('/api/', routesApi);

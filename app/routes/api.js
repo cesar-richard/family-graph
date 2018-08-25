@@ -5,6 +5,8 @@ const CASAuthentication = require('cas-authentication');
 const router = express.Router();
 const fs = require('fs');
 const visits = require('../middlewares/visits');
+const download = require('image-downloader');
+const logger = require('../logger');
 
 const cas = new CASAuthentication(config.common.cas);
 
@@ -140,25 +142,37 @@ router.post('/updateNodePos', cas.block, visits.updatePos, function(req, res, ne
 router.get('/updateLogin', function(req, res, next) {
   if (!req.query || !req.query.id)
     return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
-  orm.models.nodes
-    .update(
-      {
-        shape: 'image',
-        image: `https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=${
-          req.query.login
-        }`
-      },
-      {
-        where: {
-          id: req.query.id
-        }
-      }
-    )
-    .then(result => {
-      if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
-      else res.send({ status: 'success', id: req.query.id });
+  const options = {
+    url: `https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=${
+      req.query.login
+    }`,
+    dest: `public/img/users/${req.query.login}.jpg`
+  };
+  download
+    .image(options)
+    .then(({ filename, image }) => {
+      logger.info('User photo saved to', filename);
+      orm.models.nodes
+        .update(
+          {
+            shape: 'image',
+            image: `/img/users/${req.query.login}.jpg`
+          },
+          {
+            where: {
+              id: req.query.id
+            }
+          }
+        )
+        .then(result => {
+          if (result[0] === 0) res.status(404).send({ status: 'fail', error: 'not found' });
+          else res.send({ status: 'success', id: req.query.id });
+        })
+        .catch(orm.errorHandler);
     })
-    .catch(orm.errorHandler);
+    .catch(err => {
+      logger.error(err);
+    });
 });
 
 router.get('/checkError', function(req, res, next) {
