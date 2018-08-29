@@ -123,7 +123,7 @@ describe('Admin', () => {
       chai
         .request(server)
         .get('/api/updateLogin')
-        .query({ login: 'fakelogin', id: 1001 })
+        .query({ login: 'NOTHINGATALL', id: 1001 })
         .then(res => {
           res.should.have.status(404);
           res.should.be.json;
