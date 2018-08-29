@@ -173,11 +173,10 @@ router.get('/updatePicture', function(req, res, next) {
     dest: `public/img/users/${req.query.login}.jpg`
   };
   orm.models.nodes.findById(req.query.id).then(node => {
-
     download
     .image(options)
     .then(({ filename, image }) => {
-      logger.info('User photo saved to', filename, ' OR ');
+      logger.info('User photo saved to', filename, ' OR ', image);
       orm.models.nodes
       .update(
       {
