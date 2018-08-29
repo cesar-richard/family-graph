@@ -12,20 +12,77 @@ function generateName() {
 
 describe('Admin', () => {
   describe('POST /api/updateNodePos', () => {
-    it('should return 400 if mandatory parameters are not given', done => {
-      chai
-      .request(server)
-      .post('/api/updateNodePos')
-      .then(res => {
-        res.should.have.status(400);
-        res.should.be.json;
-        res.body.should.have.property('status').that.equals('fail');
-        res.body.should.have.property('message').that.equals('mandatory parameters missing');
-        dictum.chai(res);
-      })
-      .then(() => done())
-      .catch(err => {
-        done(new Error(err));
+    describe('should return 400 if mandatory parameters are not given', () => {
+
+      it('should return 400 if no parameters are given', done => {
+        chai
+        .request(server)
+        .post('/api/updateNodePos')
+        .then(res => {
+          res.should.have.status(400);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('fail');
+          res.body.should.have.property('message').that.equals('mandatory parameters missing');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+      });
+
+      it('should return 400 if x is not given', done => {
+        chai
+        .request(server)
+        .post('/api/updateNodePos')
+        .send({ y: -5, id: 1001 })
+        .then(res => {
+          res.should.have.status(400);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('fail');
+          res.body.should.have.property('message').that.equals('mandatory parameters missing');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+      });
+
+      it('should return 400 if y is not given', done => {
+        chai
+        .request(server)
+        .post('/api/updateNodePos')
+        .send({ x: -5, id: 1001 })
+        .then(res => {
+          res.should.have.status(400);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('fail');
+          res.body.should.have.property('message').that.equals('mandatory parameters missing');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
+      });
+
+      it('should return 400 if id is not given', done => {
+        chai
+        .request(server)
+        .post('/api/updateNodePos')
+        .send({ x: 5, y: -5 })
+        .then(res => {
+          res.should.have.status(400);
+          res.should.be.json;
+          res.body.should.have.property('status').that.equals('fail');
+          res.body.should.have.property('message').that.equals('mandatory parameters missing');
+          dictum.chai(res);
+        })
+        .then(() => done())
+        .catch(err => {
+          done(new Error(err));
+        });
       });
     });
 
@@ -129,7 +186,7 @@ describe('Admin', () => {
         });
       });
     });
-    
+
     it('should update node image and return 200', done => {
       chai
       .request(server)
