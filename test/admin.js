@@ -35,7 +35,7 @@ describe('Admin', () => {
         chai
         .request(server)
         .post('/api/updateNodePos')
-        .send({ y: -5, id: 1001 })
+        .send({ y: 0, id: 1001 })
         .then(res => {
           res.should.have.status(400);
           res.should.be.json;
@@ -53,7 +53,7 @@ describe('Admin', () => {
         chai
         .request(server)
         .post('/api/updateNodePos')
-        .send({ x: -5, id: 1001 })
+        .send({ x: 0, id: 1001 })
         .then(res => {
           res.should.have.status(400);
           res.should.be.json;
@@ -71,7 +71,7 @@ describe('Admin', () => {
         chai
         .request(server)
         .post('/api/updateNodePos')
-        .send({ x: 5, y: -5 })
+        .send({ x: 0, y: 0 })
         .then(res => {
           res.should.have.status(400);
           res.should.be.json;
