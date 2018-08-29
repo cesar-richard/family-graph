@@ -81,7 +81,7 @@ $(function(){
 		var txt = $("#graphSearchInput").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		if(txt=="")
 			return;
-		$.post( '/api/getNodeId',{ who: txt, shouldcreate: false}, function (data){
+		$.post( '/api/getNodeId',{ who: txt, dryRun: true}, function (data){
 			if(data.id!==null){
 				network.selectNodes([data.id]);
 				network.fit({nodes:[data.id]});

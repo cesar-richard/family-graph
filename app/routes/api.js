@@ -32,16 +32,16 @@ router.get('/delete', cas.block, visits.delete, function(req, res, next) {
 router.post('/getNodeId', cas.block, function(req, res, next) {
   if (!req.body || !req.body.who)
     return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
-  req.body.shouldcreate =
-    typeof req.body.shouldcreate !== 'undefined' || req.body.shouldcreate ? !!req.body.shouldcreate : true;
+  req.body.dryRun = typeof req.body.dryRun === 'undefined' ? false : req.body.dryRun;
+  logger.info(req.body);
   orm.models.nodes
     .findAll({ where: { label: { [orm.Op.like]: `%${req.body.who}%` } } })
     .then(nodes => {
       if (nodes.length > 0) {
-        res.send({ status: 'success', method: 'find', id: nodes[0].id });
+        return res.send({ status: 'success', method: 'find', id: nodes[0].id });
       } else {
-        if (req.body.shouldcreate) {
-          orm.models.nodes
+        if (!req.body.dryRun) {
+          return orm.models.nodes
             .create({
               label: req.body.who,
               creator: req.session[cas.session_name]
@@ -52,11 +52,11 @@ router.post('/getNodeId', cas.block, function(req, res, next) {
                 label: req.body.who,
                 color: { background: '#F03967', border: '#713E7F' }
               });
-              res.status(201).send({ status: 'success', method: 'create', id: node.id });
+              return res.status(201).send({ status: 'success', method: 'create', id: node.id });
             })
             .catch(orm.errorHandler);
         } else {
-          res.status(404).send({ status: 'fail', message: 'node not found' });
+          return res.status(404).send({ status: 'fail', message: 'node not found' });
         }
       }
     })

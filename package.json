@@ -91,9 +91,8 @@
       "**.css",
       "**.js",
       "**.json",
-      "**.twig",
       "**.pug"
     ],
-    "ext": "css,js,json,twig,pug"
+    "ext": "css,js,json,pug"
   }
 }

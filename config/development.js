@@ -3,7 +3,7 @@ exports.config = {
   isDevelopment: true,
   logger: {
     level: 'verbose',
-    db: require('../app/logger').info
+    db: console.log // eslint-disable-line no-console
   },
   common: {
     port: 3653,
