@@ -77,7 +77,7 @@ describe('API', () => {
       chai
         .request(server)
         .post('/api/getNodeId')
-        .send({ who: 'NOTHINGATALL', shouldcreate: false })
+        .send({ who: 'NOTHINGATALL', dryRun: true })
         .then(res => {
           res.should.have.status(404);
           res.should.be.json;
