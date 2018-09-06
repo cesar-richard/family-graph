@@ -24,6 +24,9 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
+      casLogin: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         type: Sequelize.DATE
       },

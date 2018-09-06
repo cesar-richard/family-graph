@@ -1,6 +1,7 @@
 app/dist
 app/logger/logs
 node_modules
+public/lib
 public/js
 coverage
 docs

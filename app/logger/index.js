@@ -1,4 +1,5 @@
 const winston = require('winston'),
+  DiscordLogger = require('winston-discord'),
   fs = require('fs'),
   config = require('../../config'),
   logDir = './app/logger/logs';
@@ -16,7 +17,7 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       timestamp: tsFormat,
-      colorize: false,
+      colorize: true,
       prettyPrint: true
     }),
     new winston.transports.File({
@@ -37,6 +38,11 @@ const logger = winston.createLogger({
       prettyPrint: true,
       handleExceptions: config.loggerHandlesExceptions,
       humanReadableUnhandledException: config.loggerHandlesExceptions
+    }),
+    new DiscordLogger({
+      level: 'error',
+      webhooks:
+        'https://discordapp.com/api/webhooks/484737033399566387/VpwSFqkolxgy6JcCa_3Kyes99ma6iaytPwIrfB5a0urqUb2wsPiuVrafMLJKZHi-49MF'
     })
   ]
 });

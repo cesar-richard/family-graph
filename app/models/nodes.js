@@ -15,6 +15,9 @@ exports.getModel = db => {
       type: Sequelize.STRING,
       defaultValue: 'dot'
     },
+    casLogin: {
+      type: Sequelize.STRING
+    },
     image: {
       type: Sequelize.STRING,
       defaultValue: ''
