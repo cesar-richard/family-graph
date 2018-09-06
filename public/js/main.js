@@ -96,8 +96,8 @@ $(function() {
     if (txt === '') return;
     $.post('/api/getNodeId', { who: txt, dryRun: true }, function(data) {
       if (data.id !== null) {
-        network.selectNodes([data.id]);
-        network.fit({ nodes: [data.id] });
+        network.selectNodes( [ data.id ] );
+        network.fit({ nodes: [ data.id ] });
       }
     });
   });
