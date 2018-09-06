@@ -61,6 +61,8 @@ block content
           | Y
         th(data-column-id="shape" data-order="asc" data-visible="false")
           | Shape
+        th(data-column-id="casLogin" data-order="asc")
+          | Login CAS
         th(data-column-id="image" data-order="asc")
           | Image
         th(data-column-id="createdAt" data-type="datetime" data-order="asc")
@@ -75,6 +77,7 @@ block content
           td=node.x
           td=node.y
           td=node.shape
+          td=node.casLogin
           td=node.image
           td=node.createdAt
           td
