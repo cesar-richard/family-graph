@@ -8,6 +8,7 @@ const app = require('../app');
 const debug = require('debug')('family-graph:server');
 const http = require('http');
 const config = require('../config');
+const logger = require('../app/logger');
 
 /**
  * Get port from environment and store in Express.
@@ -38,16 +39,16 @@ const io = require('socket.io')(server, {
 io.on('connection', function(socket) {
   console.log('A user connected');
   socket.on('node add', function(msg) {
-    console.log('Node add broadcast');
+    logger.info('Node add broadcast');
     socket.broadcast.emit('node add', msg);
   });
   socket.on('edge add', function(msg) {
-    console.log('Edge add broadcast');
+    logger.info('Edge add broadcast');
     socket.broadcast.emit('edge add', msg);
   });
 
   socket.on('TEST', function(msg) {
-    console.log('TEST broadcast');
+    logger.info('TEST broadcast');
     socket.broadcast.emit('TEST', msg);
   });
 });

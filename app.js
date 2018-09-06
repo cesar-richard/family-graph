@@ -48,7 +48,7 @@ const init = () => {
 
   orm.init(app);
 
-  console.log('Routes initialized'); // eslint-disable-line no-console
+  logger.info('Routes initialized');
 
   app.use(function(req, res, next) {
     const err = new Error('Not Found');
@@ -64,7 +64,7 @@ const init = () => {
       error: err
     });
   });
-  console.log('Error handler initialized'); // eslint-disable-line no-console
+  logger.info('Error handler initialized');
 
   Promise.resolve()
     .then(() => {

@@ -166,16 +166,16 @@ router.get('/checkError', function(req, res, next) {
 });
 
 router.get('/updatePicture', function(req, res, next) {
-  if (!req.query || !req.query.id || !req.query.url)
+  if (!req.query || !req.query.id || !req.query.url )
     return res.status(400).send({ status: 'fail', message: 'mandatory parameters missing' });
-  const options = {
-    url: req.query.url, //`https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=${req.query.login}`,
-    dest: `public/img/users/${req.query.login}.jpg`
-  };
-  orm.models.nodes.findById(req.query.id).then(node => {
-    download
-    .image(options)
-    .then(({ filename, image }) => {
+  orm.models.nodes
+  .findById(req.query.id)
+  .then(node => {
+    const options = {
+      url: req.query.url,
+      dest: `public/img/users/${node.casLogin}.jpg`
+    };
+    download.image(options).then(({ filename, image }) => {
       logger.info('User photo saved to', filename, ' OR ', image);
       orm.models.nodes
       .update(
@@ -193,12 +193,11 @@ router.get('/updatePicture', function(req, res, next) {
         else res.send({ status: 'success', id: req.query.id });
       })
       .catch(orm.errorHandler);
-    })
-    
+    });
   })
   .catch(err => {
     logger.error(err);
-  });;
+  });
 });
 
 router.get('/checkError', function(req, res, next) {
