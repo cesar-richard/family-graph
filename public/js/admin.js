@@ -25,9 +25,7 @@ $(function() {
             function(findData) {
               if (findData) {
                 $.get('/api/updateLogin', { id: node.id, login: findData.login }, function(res) {
-                  const url = `https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=${
-                    findData.login
-                  }`;
+                  const url = `https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=${findData.login}`;
                   checkImage(url, utcData => {
                     if (utcData === true) $.get('/api/updatePicture', { id: node.id, url }, function(res) {});
                   });

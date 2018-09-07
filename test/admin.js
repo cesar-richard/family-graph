@@ -293,7 +293,12 @@ describe('Admin', () => {
         .post('/api/getNodeId')
         .send({ who: generateName() })
         .then(node => {
-          chai
+      chai
+          .request(server)
+          .get('/api/updateLogin')
+          .query({ login: 'cerichar', id: node.body.id })
+          .then(res1 => {
+            chai
             .request(server)
             .get('/api/updatePicture')
             .query({ url: 'http://crichard.fr/no-image-icon.png', id: node.body.id })
@@ -308,6 +313,10 @@ describe('Admin', () => {
             .catch(err => {
               done(new Error(err));
             });
+          })
+          .catch(err => {
+            done(new Error(err));
+          });
         })
         .catch(errNode => {
           done(new Error(errNode));
