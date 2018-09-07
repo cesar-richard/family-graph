@@ -293,30 +293,30 @@ describe('Admin', () => {
         .post('/api/getNodeId')
         .send({ who: generateName() })
         .then(node => {
-      chai
-          .request(server)
-          .get('/api/updateLogin')
-          .query({ login: 'cerichar', id: node.body.id })
-          .then(res1 => {
-            chai
+          chai
             .request(server)
-            .get('/api/updatePicture')
-            .query({ url: 'http://crichard.fr/no-image-icon.png', id: node.body.id })
-            .then(res => {
-              res.should.have.status(200);
-              res.should.be.json;
-              res.body.should.have.property('status').that.equals('success');
-              res.body.should.have.property('id');
-              dictum.chai(res);
+            .get('/api/updateLogin')
+            .query({ login: 'cerichar', id: node.body.id })
+            .then(res1 => {
+              chai
+                .request(server)
+                .get('/api/updatePicture')
+                .query({ url: 'http://crichard.fr/no-image-icon.png', id: node.body.id })
+                .then(res => {
+                  res.should.have.status(200);
+                  res.should.be.json;
+                  res.body.should.have.property('status').that.equals('success');
+                  res.body.should.have.property('id');
+                  dictum.chai(res);
+                })
+                .then(() => done())
+                .catch(err => {
+                  done(new Error(err));
+                });
             })
-            .then(() => done())
             .catch(err => {
               done(new Error(err));
             });
-          })
-          .catch(err => {
-            done(new Error(err));
-          });
         })
         .catch(errNode => {
           done(new Error(errNode));

@@ -171,8 +171,7 @@ router.get('/updatePicture', function(req, res, next) {
   orm.models.nodes
     .findById(req.query.id)
     .then(node => {
-      if(node === null)
-        return res.status(404).send({ status: 'fail', error: 'not found' });
+      if (node === null) return res.status(404).send({ status: 'fail', error: 'not found' });
       const options = {
         url: req.query.url,
         dest: `public/img/users/${node.casLogin}.jpg`
